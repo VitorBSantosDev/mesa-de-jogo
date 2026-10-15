@@ -1,0 +1,58 @@
+{
+  "players": [
+    { "id": 1, "name": "Vitor", "color": "red" },
+    { "id": 2, "name": "Carlos", "color": "blue" },
+    { "id": 3, "name": "Paulo", "color": "yellow" },
+    { "id": 4, "name": "Matilde", "color": "green" },
+    { "id": 5, "name": "Diogo", "color": "purple" }
+  ],
+  "games": [
+    { "id": 1, "name": "Catan", "category": "Estratégia", "minPlayers": 3, "maxPlayers": 4, "duration": 90, "image": "" },
+    { "id": 2, "name": "Carcassonne", "category": "Colocação de peças", "minPlayers": 2, "maxPlayers": 5, "duration": 45, "image": "" },
+    { "id": 3, "name": "Ticket to Ride", "category": "Família", "minPlayers": 2, "maxPlayers": 5, "duration": 60, "image": "" },
+    { "id": 4, "name": "Dixit", "category": "Party", "minPlayers": 3, "maxPlayers": 6, "duration": 30, "image": "" },
+    { "id": 5, "name": "Flip 7", "category": "Abstrato", "minPlayers": 2, "maxPlayers": 4, "duration": 40, "image": "" }
+  ],
+  "matches": [
+    {
+      "id": 1, "gameId": 1, "date": "2026-09-05",
+      "results": [
+        { "playerId": 1, "score": 10 },
+        { "playerId": 2, "score": 8 },
+        { "playerId": 3, "score": 7 }
+      ]
+    },
+    {
+      "id": 2, "gameId": 4, "date": "2026-09-05",
+      "results": [
+        { "playerId": 1, "score": 22 },
+        { "playerId": 2, "score": 27 },
+        { "playerId": 3, "score": 19 },
+        { "playerId": 4, "score": 24 }
+      ]
+    },
+    {
+      "id": 3, "gameId": 2, "date": "2026-09-12",
+      "results": [
+        { "playerId": 2, "score": 88 },
+        { "playerId": 4, "score": 95 }
+      ]
+    },
+    {
+      "id": 4, "gameId": 5, "date": "2026-09-12",
+      "results": [
+        { "playerId": 1, "score": 54 },
+        { "playerId": 2, "score": 61 },
+        { "playerId": 4, "score": 47 }
+      ]
+    },
+    {
+      "id": 5, "gameId": 3, "date": "2026-09-19",
+      "results": [
+        { "playerId": 1, "score": 112 },
+        { "playerId": 3, "score": 98 },
+        { "playerId": 5, "score": 105 }
+      ]
+    }
+  ]
+}
