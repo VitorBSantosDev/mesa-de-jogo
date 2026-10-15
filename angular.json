@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "gestor-de-incidentes": {
+    "mesa-de-jogo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -83,10 +83,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gestor-de-incidentes:build:production"
+              "buildTarget": "mesa-de-jogo:build:production"
             },
             "development": {
-              "buildTarget": "gestor-de-incidentes:build:development"
+              "buildTarget": "mesa-de-jogo:build:development"
             }
           },
           "defaultConfiguration": "development"
