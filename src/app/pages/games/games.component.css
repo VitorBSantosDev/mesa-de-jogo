@@ -1,0 +1,32 @@
+.head { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 12px; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+.count { 
+    color: var(--muted); 
+    margin: 0 0 12px; 
+}
+
+.grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); 
+    gap: 14px; 
+}
+
+.state {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.state.error { 
+    border-style: solid; 
+    border-color: var(--danger); 
+    color: var(--ink); }
