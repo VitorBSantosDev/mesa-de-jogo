@@ -1,1 +1,23 @@
-<p>games works!</p>
+<div class="head">
+  <h1>Jogos</h1>
+  <a routerLink="/jogos/novo" class="btn primary">Adicionar jogo</a>
+</div>
+
+@if (isLoading) {
+  <p class="state">A carregar jogos…</p>
+} @else if (errorMessage) {
+  <div class="state error">
+    <p>{{ errorMessage }}</p>
+    <button class="btn" type="button" (click)="loadGames()">Tentar novamente</button>
+  </div>
+} @else {
+  <p class="count">{{ games.length }} jogos na coleção</p>
+
+  <div class="grid">
+    @for (game of games; track game.id) {
+      <app-game-card [game]="game" (open)="goToGame($event)" />
+    } @empty {
+      <p class="state">Ainda não há jogos. Adiciona o primeiro.</p>
+    }
+  </div>
+}
