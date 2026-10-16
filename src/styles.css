@@ -1,1 +1,85 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg: #eceef5; 
+  --surface: #ffffff; 
+  --ink: #1b1f33; 
+  --muted: #5b6180; 
+  --line: #d8dbe8;
+  --accent: #3b3fb6; 
+  --accent-ink: #ffffff;
+  --chrome: #272c66; 
+  --chrome-ink: #f1f2ff;
+  --danger: #c42e2e; 
+  --ok: #2c9658; 
+  --gold: #b98200;
+  --shadow: 0 1px 2px rgb(27 31 51 / .06), 0 4px 12px -4px rgb(27 31 51 / .12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f2333; 
+    --surface: #2a2f44; 
+    --ink: #eceefa; 
+    --muted: #acb1cb; 
+    --line: #41475f;
+    --accent: #9497ff; 
+    --accent-ink: #15173d;
+    --chrome: #353b80; 
+    --chrome-ink: #f1f2ff;
+    --danger: #ff7a7a; 
+    --ok: #5fd08f; 
+    --gold: #f0c040;
+  }
+}
+
+* { 
+    box-sizing: border-box; 
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.page { 
+    max-width: 1180px; 
+    margin: 0 auto; 
+    padding: 24px 16px 64px; }
+
+h1 { 
+    margin: 0 0 16px; 
+}
+
+.btn {
+  display: inline-block;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.primary { 
+    background: var(--accent); 
+    border-color: var(--accent); 
+    color: var(--accent-ink); 
+}
+
+.btn:disabled { 
+    opacity: .45; 
+    cursor: not-allowed; 
+}
+
+.box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
