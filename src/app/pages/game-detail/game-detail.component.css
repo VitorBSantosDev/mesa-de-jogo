@@ -33,6 +33,7 @@ h2 {
   border-radius: 6px;
   padding: 10px 12px;
 }
+
 .facts dt {
   font-family: var(--f-display);
   font-size: .72rem;
@@ -109,6 +110,7 @@ h2 {
   text-align: center;
   color: var(--muted);
 }
+
 .state.error { 
     border-style: solid; 
     border-color: var(--danger); 
