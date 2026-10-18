@@ -121,3 +121,51 @@ h2 {
   .facts { grid-template-columns: repeat(2, 1fr); }
   .columns { grid-template-columns: 1fr; }
 }
+
+.danger-zone {
+  margin-top: 32px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line));
+  border-radius: 6px;
+}
+
+.danger-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.danger-head h2 { 
+    margin: 0; 
+}
+
+.confirm {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.confirm p { margin: 0 0 12px; }
+
+.actions { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+}
+
+.error { 
+    color: var(--danger); 
+}
+
+.btn.danger {
+    color: var(--danger);
+    border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+}
+
+.btn.danger-solid {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: var(--surface);
+}

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { GameService } from '../../services/game.service';
@@ -19,6 +19,7 @@ import { PlayerWins } from '../../models/player-stats.model';
 })
 export class GameDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private gameService = inject(GameService);
   private matchService = inject(MatchService);
   private playerService = inject(PlayerService);
@@ -29,6 +30,10 @@ export class GameDetailComponent implements OnInit {
 
   isLoading = true;
   errorMessage = '';
+
+  isConfirmingDelete = false;
+  isDeleting = false;
+  deleteError = '';
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -79,5 +84,29 @@ export class GameDetailComponent implements OnInit {
 
   ranked(match: Match): MatchResult[] {
     return [...match.results].sort((playerA, playerB) => playerB.score - playerA.score);
+  }
+
+  askDelete(): void {
+    this.isConfirmingDelete = true;
+    this.deleteError = '';
+  }
+
+  cancelDelete(): void {
+    this.isConfirmingDelete = false;
+  }
+
+  deleteGame(): void {
+    if (!this.game) return;
+
+    this.isDeleting = true;
+    this.deleteError = '';
+
+    this.gameService.delete(this.game.id).subscribe({
+      next: () => this.router.navigate(['/jogos']),
+      error: () => {
+        this.deleteError = 'Não foi possível remover o jogo. Confirme que a API está a correr.';
+        this.isDeleting = false;
+      },
+    });
   }
 }
