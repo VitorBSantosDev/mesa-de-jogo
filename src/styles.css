@@ -1,33 +1,35 @@
 :root {
-  --bg: #eceef5; 
-  --surface: #ffffff; 
-  --ink: #1b1f33; 
-  --muted: #5b6180; 
-  --line: #d8dbe8;
-  --accent: #3b3fb6; 
-  --accent-ink: #ffffff;
-  --chrome: #272c66; 
-  --chrome-ink: #f1f2ff;
-  --danger: #c42e2e; 
-  --ok: #2c9658; 
-  --gold: #b98200;
-  --shadow: 0 1px 2px rgb(27 31 51 / .06), 0 4px 12px -4px rgb(27 31 51 / .12);
+  --bg: #e6d7b2;
+  --surface: #f5ecd4;
+  --ink: #2b1d10;
+  --muted: #6b5537;
+  --line: #cbb586;
+  --accent: #7d2119;
+  --accent-ink: #f8eed6;
+  --chrome: #233420;
+  --chrome-ink: #ecdcac;
+  --gold: #9c7420;
+  --danger: #a32a1f;
+  --ok: #3d7a3a;
+  --shadow: 0 1px 2px rgb(60 40 15 / .1), 0 6px 14px -6px rgb(60 40 15 / .25);
+  --f-display: 'Cinzel', Georgia, serif;
+  --f-body: 'EB Garamond', Garamond, Georgia, serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1f2333; 
-    --surface: #2a2f44; 
-    --ink: #eceefa; 
-    --muted: #acb1cb; 
-    --line: #41475f;
-    --accent: #9497ff; 
-    --accent-ink: #15173d;
-    --chrome: #353b80; 
-    --chrome-ink: #f1f2ff;
-    --danger: #ff7a7a; 
-    --ok: #5fd08f; 
-    --gold: #f0c040;
+    --bg: #17120c;
+    --surface: #231b12;
+    --ink: #eedfbd;
+    --muted: #b9a47d;
+    --line: #4b3c26;
+    --accent: #e09a3e;
+    --accent-ink: #1d1206;
+    --chrome: #101810;
+    --chrome-ink: #e8d39c;
+    --gold: #e2b856;
+    --danger: #ff8270;
+    --ok: #86cc7a;
   }
 }
 
@@ -39,8 +41,14 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Segoe UI', system-ui, sans-serif;
   line-height: 1.5;
+  font-family: var(--f-body);
+  font-size: 16.5px;
+}
+
+h1, h2, h3, .btn {
+  font-family: var(--f-display);
+  letter-spacing: .04em;
 }
 
 .page { 

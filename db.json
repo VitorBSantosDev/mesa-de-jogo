@@ -1,10 +1,10 @@
 {
   "players": [
-    { "id": 1, "name": "Vitor", "color": "red" },
-    { "id": 2, "name": "Carlos", "color": "blue" },
-    { "id": 3, "name": "Paulo", "color": "yellow" },
-    { "id": 4, "name": "Matilde", "color": "green" },
-    { "id": 5, "name": "Diogo", "color": "purple" }
+    { "id": 1, "name": "Vitor", "avatar": "sauron" },
+    { "id": 2, "name": "Bruno", "avatar": "aragorn" },
+    { "id": 3, "name": "Carlos", "avatar": "gimli" },
+    { "id": 4, "name": "Matilde", "avatar": "galadriel" },
+    { "id": 5, "name": "Diogo", "avatar": "legolas" }
   ],
   "games": [
     { "id": 1, "name": "Catan", "category": "Estratégia", "minPlayers": 3, "maxPlayers": 4, "duration": 90, "image": "" },
