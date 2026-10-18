@@ -3,10 +3,10 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 20px;
-  padding: 12px 24px;
-  background: var(--chrome);
   color: var(--chrome-ink);
   border-bottom: 3px double var(--gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--chrome) 80%, #000), var(--chrome));
+  padding: 14px 24px;
 }
 
 .brand {
@@ -30,9 +30,12 @@ nav a {
   color: inherit;
   text-decoration: none;
   padding: 6px 14px;
-  border-radius: 999px;
   opacity: 0.75;
   font-weight: 600;
+  border-radius: 3px;
+  font-family: var(--f-display);
+  letter-spacing: .06em;
+  font-size: .84rem;
 }
 
 nav a:hover { 

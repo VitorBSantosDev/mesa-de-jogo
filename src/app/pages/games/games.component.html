@@ -11,13 +11,50 @@
     <button class="btn" type="button" (click)="loadGames()">Tentar novamente</button>
   </div>
 } @else {
-  <p class="count">{{ games.length }} jogos na coleção</p>
+  <div class="filters box">
+    <label class="field">
+      <span>Pesquisa</span>
+      <input type="search" placeholder="Nome do jogo" [(ngModel)]="searchTerm" />
+    </label>
+
+    <label class="field">
+      <span>Categoria</span>
+      <select [(ngModel)]="categoryFilter">
+        <option value="">Todas</option>
+        @for (category of categories; track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Ordenar por</span>
+      <select [(ngModel)]="sortBy">
+        <option value="name">Nome</option>
+        <option value="played">Mais jogados</option>
+        <option value="duration">Mais rápidos</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="count">
+    <span>{{ filteredGames.length }} de {{ games.length }} jogos</span>
+    @if (hasFilters) {
+      <button class="btn small" type="button" (click)="clearFilters()">Limpar filtros</button>
+    }
+  </div>
 
   <div class="grid">
-    @for (game of games; track game.id) {
-      <app-game-card [game]="game" (open)="goToGame($event)" />
+    @for (game of filteredGames; track game.id) {
+      <app-game-card [game]="game" [timesPlayed]="timesPlayed(game.id)" (open)="goToGame($event)" />
     } @empty {
-      <p class="state">Ainda não há jogos. Adiciona o primeiro.</p>
+      <p class="state">
+        @if (games.length) {
+          Nenhum jogo corresponde aos filtros.
+        } @else {
+          Ainda não há jogos. Adiciona o primeiro.
+        }
+      </p>
     }
   </div>
 }

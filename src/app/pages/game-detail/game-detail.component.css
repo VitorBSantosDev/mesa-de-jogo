@@ -1,0 +1,121 @@
+.back { 
+    color: var(--accent); 
+    text-decoration: none; 
+    font-weight: 600; 
+}
+
+.back:hover { 
+    text-decoration: underline; 
+}
+
+h1 {
+  margin-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, var(--gold), transparent 60%) 1;
+}
+
+h2 { 
+    font-size: 1.1rem; 
+    margin: 0 0 10px; 
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.facts div {
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.facts dt {
+  font-family: var(--f-display);
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd { 
+    margin: 4px 0 0; 
+    font-weight: 700; 
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin: 6px 0; 
+}
+
+.record { 
+    font-family: var(--f-display); 
+    font-size: 2rem; 
+    margin: 0; 
+    color: var(--gold); 
+}
+
+.muted { 
+    color: var(--muted); 
+    margin: 4px 0 0; 
+}
+
+.match { 
+    display: flex; 
+    gap: 16px; 
+    align-items: baseline; 
+    margin-bottom: 10px; 
+}
+
+.date { 
+    min-width: 90px; 
+    color: var(--muted); 
+}
+
+.match ol { 
+    margin: 0; 
+    padding-left: 20px; 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4px 22px; 
+}
+
+.winner { 
+    font-weight: 700; 
+    color: var(--gold); 
+}
+
+.score { 
+    color: var(--muted); 
+    font-size: .9rem; 
+}
+
+.state {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+.state.error { 
+    border-style: solid; 
+    border-color: var(--danger); 
+    color: var(--ink); 
+}
+
+@media (max-width: 700px) {
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .columns { grid-template-columns: 1fr; }
+}

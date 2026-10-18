@@ -1,1 +1,58 @@
-<p>game-detail works!</p>
+<a routerLink="/jogos" class="back">← Voltar aos jogos</a>
+
+@if (isLoading) {
+  <p class="state">A carregar…</p>
+} @else if (errorMessage) {
+  <p class="state error">{{ errorMessage }}</p>
+} @else if (game) {
+  <h1>{{ game.name }}</h1>
+
+  <dl class="facts">
+    <div><dt>Categoria</dt><dd>{{ game.category }}</dd></div>
+    <div><dt>Jogadores</dt><dd>{{ game.minPlayers }}–{{ game.maxPlayers }}</dd></div>
+    <div><dt>Duração</dt><dd>{{ game.duration }} min</dd></div>
+    <div><dt>Partidas</dt><dd>{{ matches.length }}</dd></div>
+  </dl>
+
+  <div class="columns">
+    <section class="box">
+      <h2>Vitórias</h2>
+      @for (playerWins of winsByPlayer; track playerWins.player.id) {
+        <p class="row">
+          <span>{{ playerWins.player.name }}</span>
+          <strong>{{ playerWins.wins }}</strong>
+        </p>
+      } @empty {
+        <p class="muted">Ainda ninguém ganhou neste jogo.</p>
+      }
+    </section>
+
+    <section class="box">
+      <h2>Recorde</h2>
+      @if (record; as best) {
+        <p class="record">{{ best.result.score }} pontos</p>
+        <p class="muted">
+          {{ playerName(best.result.playerId) }}, em {{ best.date | date: 'd MMM y' }}
+        </p>
+      } @else {
+        <p class="muted">Sem partidas registadas.</p>
+      }
+    </section>
+  </div>
+
+  <h2>Partidas</h2>
+  @for (match of matches; track match.id) {
+    <article class="match box">
+      <span class="date">{{ match.date | date: 'd MMM y' }}</span>
+      <ol>
+        @for (result of ranked(match); track result.playerId; let first = $first) {
+          <li [class.winner]="first">
+            {{ playerName(result.playerId) }} <span class="score">{{ result.score }}</span>
+          </li>
+        }
+      </ol>
+    </article>
+  } @empty {
+    <p class="state">Ainda não há partidas deste jogo.</p>
+  }
+}

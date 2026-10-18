@@ -12,5 +12,9 @@
       <span>{{ game.minPlayers }}–{{ game.maxPlayers }} jogadores</span>
       <span>{{ game.duration }} min</span>
     </p>
+    <p class="played">
+      {{ timesPlayed }} {{ timesPlayed === 1 ? 'partida' : 'partidas' }}
+    </p>
+
   </div>
 </button>

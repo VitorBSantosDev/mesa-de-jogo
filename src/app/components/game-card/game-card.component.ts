@@ -9,6 +9,7 @@ import { Game, GameCategory } from '../../models/game.model';
 
 export class GameCardComponent {
   @Input({ required: true }) game!: Game;
+  @Input() timesPlayed = 0;
 
   @Output() open = new EventEmitter<number>();
 

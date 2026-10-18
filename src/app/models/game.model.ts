@@ -13,3 +13,7 @@ export interface Game {
 }
 
 export type NewGame = Omit<Game, "id">;
+
+export const GAME_CATEGORIES: GameCategory[] = [
+  'Estratégia', 'Colocação de peças', 'Família', 'Party', 'Abstrato', 'Cartas',
+];
