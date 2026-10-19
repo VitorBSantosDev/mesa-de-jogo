@@ -3,11 +3,11 @@
   <a routerLink="/jogos/novo" class="btn primary">Adicionar jogo</a>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <p class="state">A carregar jogos…</p>
-} @else if (errorMessage) {
+} @else if (errorMessage()) {
   <div class="state error">
-    <p>{{ errorMessage }}</p>
+    <p>{{ errorMessage() }}</p>
     <button class="btn" type="button" (click)="loadGames()">Tentar novamente</button>
   </div>
 } @else {
@@ -38,18 +38,18 @@
   </div>
 
   <div class="count">
-    <span>{{ filteredGames.length }} de {{ games.length }} jogos</span>
-    @if (hasFilters) {
+    <span>{{ filteredGames().length }} de {{ games().length }} jogos</span>
+    @if (hasFilters()) {
       <button class="btn small" type="button" (click)="clearFilters()">Limpar filtros</button>
     }
   </div>
 
   <div class="grid">
-    @for (game of filteredGames; track game.id) {
+    @for (game of filteredGames(); track game.id) {
       <app-game-card [game]="game" [timesPlayed]="timesPlayed(game.id)" (open)="goToGame($event)" />
     } @empty {
       <p class="state">
-        @if (games.length) {
+        @if (games().length) {
           Nenhum jogo corresponde aos filtros.
         } @else {
           Ainda não há jogos. Adiciona o primeiro.

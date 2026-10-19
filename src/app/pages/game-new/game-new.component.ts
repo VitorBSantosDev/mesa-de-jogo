@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
@@ -17,7 +17,6 @@ const MAX_IMAGE_BYTES = MAX_IMAGE_MB * BYTES_PER_MB;
 
 @Component({
   selector: 'app-game-new',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, RouterLink, GameCardComponent],
   templateUrl: './game-new.component.html',
   styleUrl: './game-new.component.css',
@@ -33,11 +32,11 @@ export class GameNewComponent implements OnInit {
 
   private existingNames: string[] = [];
 
-  isSaving = false;
-  saveError = '';
+  isSaving = signal(false);
+  saveError = signal('');
 
-  isReadingImage = false;
-  imageError = '';
+  isReadingImage = signal(false);
+  imageError = signal('');
 
   nameIsUnique = (control: AbstractControl) => {
     const name = control.value.trim().toLowerCase();
@@ -78,31 +77,31 @@ export class GameNewComponent implements OnInit {
     input.value = '';
     if (!file) return;
 
-    this.imageError = '';
+    this.imageError.set('');
 
     if (!file.type.startsWith('image/')) {
-      this.imageError = 'Escolha um ficheiro de imagem (JPG, PNG ou WebP).';
+      this.imageError.set('Escolha um ficheiro de imagem (JPG, PNG ou WebP).');
       return;
     }
     if (file.size > MAX_IMAGE_BYTES) {
-      this.imageError = `A imagem tem mais de ${MAX_IMAGE_MB} MB. Escolha uma mais pequena.`;
+      this.imageError.set(`A imagem tem mais de ${MAX_IMAGE_MB} MB. Escolha uma mais pequena.`);
       return;
     }
 
-    this.isReadingImage = true;
+    this.isReadingImage.set(true);
     try {
       const dataUrl = await resizeImage(file);
       this.form.controls.image.setValue(dataUrl);
     } catch {
-      this.imageError = 'Não foi possível ler esta imagem. Experimente outro ficheiro.';
+      this.imageError.set('Não foi possível ler esta imagem. Experimente outro ficheiro.');
     } finally {
-      this.isReadingImage = false;
+      this.isReadingImage.set(false);
     }
   }
 
   removeImage(): void {
     this.form.controls.image.setValue('');
-    this.imageError = '';
+    this.imageError.set('');
   }
 
   get preview(): Game {
@@ -124,7 +123,7 @@ export class GameNewComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.form.invalid || this.isReadingImage) {
+    if (this.form.invalid || this.isReadingImage()) {
       this.form.markAllAsTouched();
       return;
     }
@@ -139,14 +138,14 @@ export class GameNewComponent implements OnInit {
       image: values.image,
     };
 
-    this.isSaving = true;
-    this.saveError = '';
+    this.isSaving.set(true);
+    this.saveError.set('');
 
     this.gameService.create(newGame).subscribe({
       next: (created) => this.router.navigate(['/jogos', created.id]),
       error: () => {
-        this.saveError = 'Não foi possível guardar o jogo. Confirme que a API está a correr.';
-        this.isSaving = false;
+        this.saveError.set('Não foi possível guardar o jogo. Confirme que a API está a correr.');
+        this.isSaving.set(false);
       },
     });
   }

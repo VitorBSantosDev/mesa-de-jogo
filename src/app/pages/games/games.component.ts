@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -12,7 +12,6 @@ type SortOption = 'name' | 'played' | 'duration';
 
 @Component({
   selector: 'app-games',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [GameCardComponent, RouterLink, FormsModule],
   templateUrl: './games.component.html',
   styleUrl: './games.component.css',
@@ -22,69 +21,72 @@ export class GamesComponent implements OnInit {
   private matchService = inject(MatchService);
   private router = inject(Router);
 
-  games: Game[] = [];
-  matches: Match[] = [];
   categories = GAME_CATEGORIES;
 
-  isLoading = true;
-  errorMessage = '';
+  games = signal<Game[]>([]);
+  matches = signal<Match[]>([]);
 
-  searchTerm = '';
-  categoryFilter: GameCategory | '' = '';
-  sortBy: SortOption = 'name';
+  isLoading = signal(true);
+  errorMessage = signal('');
+
+  searchTerm = signal('');
+  categoryFilter = signal<GameCategory | ''>('');
+  sortBy = signal<SortOption>('name');
 
   ngOnInit(): void {
     this.loadGames();
   }
 
   loadGames(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     forkJoin({
       games: this.gameService.getAll(),
       matches: this.matchService.getAll(),
     }).subscribe({
       next: ({ games, matches }) => {
-        this.games = games;
-        this.matches = matches;
-        this.isLoading = false;
+        this.games.set(games);
+        this.matches.set(matches);
+        this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage = 'Não foi possível carregar os jogos. Confirme que a API está a correr.';
-        this.isLoading = false;
+        this.errorMessage.set('Não foi possível carregar os jogos. Confirme que a API está a correr.');
+        this.isLoading.set(false);
       },
     });
   }
 
   timesPlayed(gameId: number): number {
-    return this.matches.filter((match) => match.gameId === gameId).length;
+    return this.matches().filter((match) => match.gameId === gameId).length;
   }
 
-  get filteredGames(): Game[] {
-    const termSearched = this.searchTerm.trim().toLowerCase();
+  filteredGames = computed(() => {
+    const termSearched = this.searchTerm().trim().toLowerCase();
+    const category = this.categoryFilter();
+    const sortBy = this.sortBy();
 
-    const gamesList = this.games.filter(
+    const gamesList = this.games().filter(
       (game) =>
-        (!this.categoryFilter || game.category === this.categoryFilter) &&
+        (!category || game.category === category) &&
         (!termSearched || game.name.toLowerCase().includes(termSearched)),
     );
 
     return [...gamesList].sort((gameA, gameB) => {
-      if (this.sortBy === 'played') return this.timesPlayed(gameB.id) - this.timesPlayed(gameA.id);
-      if (this.sortBy === 'duration') return gameA.duration - gameB.duration;
+      if (sortBy === 'played') return this.timesPlayed(gameB.id) - this.timesPlayed(gameA.id);
+      if (sortBy === 'duration') return gameA.duration - gameB.duration;
       return gameA.name.localeCompare(gameB.name, 'pt');
     });
-  }
+  });
 
-  get hasFilters(): boolean {
-    return !!this.searchTerm.trim() || !!this.categoryFilter || this.sortBy !== 'name';
-  }
+  hasFilters = computed(
+    () => !!this.searchTerm().trim() || !!this.categoryFilter() || this.sortBy() !== 'name',
+  );
 
   clearFilters(): void {
-    this.searchTerm = '';
-    this.categoryFilter = '';
-    this.sortBy = 'name';
+    this.searchTerm.set('');
+    this.categoryFilter.set('');
+    this.sortBy.set('name');
   }
 
   goToGame(id: number): void {

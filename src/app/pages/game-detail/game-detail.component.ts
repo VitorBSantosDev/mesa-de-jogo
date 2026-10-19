@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
@@ -12,11 +12,11 @@ import { PlayerWins } from '../../models/player-stats.model';
 
 @Component({
   selector: 'app-game-detail',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterLink, DatePipe],
   templateUrl: './game-detail.component.html',
   styleUrl: './game-detail.component.css',
 })
+
 export class GameDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -24,16 +24,16 @@ export class GameDetailComponent implements OnInit {
   private matchService = inject(MatchService);
   private playerService = inject(PlayerService);
 
-  game?: Game;
-  matches: Match[] = [];
-  players: Player[] = [];
+  game = signal<Game | undefined>(undefined);
+  matches = signal<Match[]>([]);
+  players = signal<Player[]>([]);
 
-  isLoading = true;
-  errorMessage = '';
+  isLoading = signal(true);
+  errorMessage = signal('');
 
-  isConfirmingDelete = false;
-  isDeleting = false;
-  deleteError = '';
+  isConfirmingDelete = signal(false);
+  isDeleting = signal(false);
+  deleteError = signal('');
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -44,35 +44,35 @@ export class GameDetailComponent implements OnInit {
       players: this.playerService.getAll(),
     }).subscribe({
       next: ({ game, matches, players }) => {
-        this.game = game;
-        this.matches = [...matches].sort((matchA, matchB) => matchB.date.localeCompare(matchA.date));
-        this.players = players;
-        this.isLoading = false;
+        this.game.set(game);
+        this.matches.set([...matches].sort((matchA, matchB) => matchB.date.localeCompare(matchA.date)));
+        this.players.set(players);
+        this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage = 'Não encontrámos este jogo. Pode ter sido removido.';
-        this.isLoading = false;
+        this.errorMessage.set('Não encontrámos este jogo. Pode ter sido removido.');
+        this.isLoading.set(false);
       },
     });
   }
 
   playerName(id: number): string {
-    return this.players.find((player) => player.id === id)?.name ?? 'Jogador removido';
+    return this.players().find((player) => player.id === id)?.name ?? 'Jogador removido';
   }
 
-  get winsByPlayer(): PlayerWins[] {
-    return this.players
+  winsByPlayer = computed<PlayerWins[]>(() =>
+    this.players()
       .map((player) => ({
         player,
-        wins: this.matches.filter((match) => this.matchService.winnerOf(match) === player.id).length,
+        wins: this.matches().filter((match) => this.matchService.winnerOf(match) === player.id).length,
       }))
       .filter((player) => player.wins > 0)
-      .sort((playerA, playerB) => playerB.wins - playerA.wins);
-  }
+      .sort((playerA, playerB) => playerB.wins - playerA.wins),
+  );
 
-  get record(): { result: MatchResult; date: string } | null {
+  record = computed(() => {
     let best: { result: MatchResult; date: string } | null = null;
-    for (const match of this.matches) {
+    for (const match of this.matches()) {
       for (const result of match.results) {
         if (!best || result.score > best.result.score) {
           best = { result, date: match.date };
@@ -80,32 +80,33 @@ export class GameDetailComponent implements OnInit {
       }
     }
     return best;
-  }
+  });
 
   ranked(match: Match): MatchResult[] {
     return [...match.results].sort((playerA, playerB) => playerB.score - playerA.score);
   }
 
   askDelete(): void {
-    this.isConfirmingDelete = true;
-    this.deleteError = '';
+    this.isConfirmingDelete.set(true);
+    this.deleteError.set('');
   }
 
   cancelDelete(): void {
-    this.isConfirmingDelete = false;
+    this.isConfirmingDelete.set(false);
   }
 
   deleteGame(): void {
-    if (!this.game) return;
+    const game = this.game();
+    if (!game) return;
 
-    this.isDeleting = true;
-    this.deleteError = '';
+    this.isDeleting.set(true);
+    this.deleteError.set('');
 
-    this.gameService.delete(this.game.id).subscribe({
+    this.gameService.delete(game.id).subscribe({
       next: () => this.router.navigate(['/jogos']),
       error: () => {
-        this.deleteError = 'Não foi possível remover o jogo. Confirme que a API está a correr.';
-        this.isDeleting = false;
+        this.deleteError.set('Não foi possível remover o jogo. Confirme que a API está a correr.');
+        this.isDeleting.set(false);
       },
     });
   }

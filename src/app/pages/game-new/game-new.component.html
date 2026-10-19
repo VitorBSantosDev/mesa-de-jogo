@@ -77,25 +77,25 @@
           <button type="button" class="btn" (click)="removeImage()">Remover imagem</button>
         }
 
-        @if (isReadingImage) {
+        @if (isReadingImage()) {
           <small class="hint">A ler a imagem…</small>
         }
       </div>
 
-      @if (imageError) {
-        <small class="error">{{ imageError }}</small>
+      @if (imageError()) {
+        <small class="error">{{ imageError() }}</small>
       } @else {
         <small class="hint">JPG, PNG ou WebP, até {{ maxImageMb }} MB. Aparece no topo do cartão.</small>
       }
     </div>
 
-    @if (saveError) {
-      <p class="error">{{ saveError }}</p>
+    @if (saveError()) {
+      <p class="error">{{ saveError() }}</p>
     }
 
     <div class="actions">
-      <button type="submit" class="btn primary" [disabled]="isSaving || isReadingImage">
-        {{ isSaving ? 'A guardar…' : 'Adicionar à coleção' }}
+      <button type="submit" class="btn primary" [disabled]="isSaving() || isReadingImage()">
+        {{ isSaving() ? 'A guardar…' : 'Adicionar à coleção' }}
       </button>
       <a routerLink="/jogos" class="btn">Cancelar</a>
     </div>

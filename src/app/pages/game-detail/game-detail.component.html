@@ -1,23 +1,23 @@
 <a routerLink="/jogos" class="back">← Voltar aos jogos</a>
 
-@if (isLoading) {
+@if (isLoading()) {
   <p class="state">A carregar…</p>
-} @else if (errorMessage) {
-  <p class="state error">{{ errorMessage }}</p>
-} @else if (game) {
+} @else if (errorMessage()) {
+  <p class="state error">{{ errorMessage() }}</p>
+} @else if (game(); as game) {
   <h1>{{ game.name }}</h1>
 
   <dl class="facts">
     <div><dt>Categoria</dt><dd>{{ game.category }}</dd></div>
     <div><dt>Jogadores</dt><dd>{{ game.minPlayers }}–{{ game.maxPlayers }}</dd></div>
     <div><dt>Duração</dt><dd>{{ game.duration }} min</dd></div>
-    <div><dt>Partidas</dt><dd>{{ matches.length }}</dd></div>
+    <div><dt>Partidas</dt><dd>{{ matches().length }}</dd></div>
   </dl>
 
   <div class="columns">
     <section class="box">
       <h2>Vitórias</h2>
-      @for (playerWins of winsByPlayer; track playerWins.player.id) {
+      @for (playerWins of winsByPlayer(); track playerWins.player.id) {
         <p class="row">
           <span>{{ playerWins.player.name }}</span>
           <strong>{{ playerWins.wins }}</strong>
@@ -29,7 +29,7 @@
 
     <section class="box">
       <h2>Recorde</h2>
-      @if (record; as best) {
+      @if (record(); as best) {
         <p class="record">{{ best.result.score }} pontos</p>
         <p class="muted">
           {{ playerName(best.result.playerId) }}, em {{ best.date | date: 'd MMM y' }}
@@ -41,7 +41,7 @@
   </div>
 
   <h2>Partidas</h2>
-  @for (match of matches; track match.id) {
+  @for (match of matches(); track match.id) {
     <article class="match box">
       <span class="date">{{ match.date | date: 'd MMM y' }}</span>
       <ol>
@@ -55,38 +55,39 @@
   } @empty {
     <p class="state">Ainda não há partidas deste jogo.</p>
   }
+
   <section class="danger-zone">
     <div class="danger-head">
       <div>
         <h2>Remover jogo</h2>
         <p class="muted">Retira o {{ game.name }} da coleção.</p>
       </div>
-      @if (!isConfirmingDelete) {
+      @if (!isConfirmingDelete()) {
         <button type="button" class="btn danger" (click)="askDelete()">Remover jogo</button>
       }
     </div>
 
-    @if (isConfirmingDelete) {
+    @if (isConfirmingDelete()) {
       <div class="confirm">
-        @if (matches.length) {
+        @if (matches().length) {
           <p>
-            <strong>Atenção:</strong> este jogo tem {{ matches.length }}
-            {{ matches.length === 1 ? 'partida registada, que também vai ser apagada' : 'partidas registadas, que também vão ser apagadas' }}.
+            <strong>Atenção:</strong> este jogo tem {{ matches().length }}
+            {{ matches().length === 1 ? 'partida registada, que também vai ser apagada' : 'partidas registadas, que também vão ser apagadas' }}.
             A classificação vai ser recalculada.
           </p>
         } @else {
           <p>Este jogo não tem partidas registadas.</p>
         }
 
-        @if (deleteError) {
-          <p class="error">{{ deleteError }}</p>
+        @if (deleteError()) {
+          <p class="error">{{ deleteError() }}</p>
         }
 
         <div class="actions">
-          <button type="button" class="btn danger-solid" [disabled]="isDeleting" (click)="deleteGame()">
-            {{ isDeleting ? 'A remover…' : 'Confirmar remoção' }}
+          <button type="button" class="btn danger-solid" [disabled]="isDeleting()" (click)="deleteGame()">
+            {{ isDeleting() ? 'A remover…' : 'Confirmar remoção' }}
           </button>
-          <button type="button" class="btn" [disabled]="isDeleting" (click)="cancelDelete()">
+          <button type="button" class="btn" [disabled]="isDeleting()" (click)="cancelDelete()">
             Manter jogo
           </button>
         </div>
