@@ -69,23 +69,41 @@ body {
   font-family: var(--f-body);
   font-size: 16.5px;
   background-image:
-    radial-gradient(ellipse at 20% 0%, rgb(255 248 225 / .45), transparent 55%),
-    radial-gradient(ellipse at 90% 100%, rgb(110 70 20 / .14), transparent 55%);
+    radial-gradient(ellipse at 50% 0%, rgb(255 250 230 / .35), transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgb(120 80 25 / .1), transparent 50%);
   background-attachment: fixed;
 }
 
-h1, h2, h3, .btn {
+button, input, select, textarea {
+  font: inherit;
+}
+
+h1, h2, h3, .btn, nav a {
   font-family: var(--f-display);
   letter-spacing: .04em;
 }
 
 .page { 
-    max-width: 1180px; 
-    margin: 0 auto; 
-    padding: 24px 16px 64px; }
+  max-width: 1180px; 
+  margin: 0 auto; 
+  padding: 24px 16px 64px; 
+}
 
 h1 { 
-    margin: 0 0 16px; 
+  margin: 0 0 16px;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+
+h3 {
+  font-weight: 600;
 }
 
 .btn {
@@ -94,7 +112,6 @@ h1 {
   background: var(--surface);
   color: var(--ink);
   padding: 8px 14px;
-  font: inherit;
   text-decoration: none;
   cursor: pointer;
   border-radius: 4px;
@@ -127,5 +144,3 @@ h1 {
     inset 0 0 0 4px color-mix(in srgb, var(--gold) 22%, transparent),
     var(--shadow);
 }
-
-h1, h2 { font-weight: 700; letter-spacing: .05em; }

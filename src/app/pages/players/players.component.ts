@@ -1,9 +1,146 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { PlayerService } from '../../services/player.service';
+import { MatchService } from '../../services/match.service';
+import { Player, PlayerAvatar } from '../../models/player.model';
+import { Match } from '../../models/match.model';
+import { PlayerStanding } from '../../models/player-stats.model';
+import { CHARACTERS, characterName } from '../../models/characters.model';
+import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 
 @Component({
-  imports: [],
   selector: 'app-players',
-  styleUrl: './players.component.css',
+  imports: [ReactiveFormsModule, CharacterIconComponent],
   templateUrl: './players.component.html',
+  styleUrl: './players.component.css',
 })
-export class PlayersComponent {}
+
+export class PlayersComponent implements OnInit {
+  private formBuilder = inject(NonNullableFormBuilder);
+  private playerService = inject(PlayerService);
+  private matchService = inject(MatchService);
+
+  characterName = characterName;
+  maxPlayers = CHARACTERS.length;
+
+  players = signal<Player[]>([]);
+  matches = signal<Match[]>([]);
+
+  isLoading = signal(true);
+  errorMessage = signal('');
+
+  isSaving = signal(false);
+  saveError = signal('');
+
+  confirmingDeleteId = signal<number | null>(null);
+  isDeleting = signal(false);
+  deleteError = signal('');
+
+  nameIsUnique = (control: AbstractControl) => {
+    const name = control.value.trim().toLowerCase();
+    const exists = this.players().some((player) => player.name.toLowerCase() === name);
+    return exists ? { duplicate: true } : null;
+  };
+
+  form = this.formBuilder.group({
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20), this.nameIsUnique]],
+    avatar: ['' as PlayerAvatar | '', Validators.required],
+  });
+
+  availableCharacters = computed(() => {
+    const used = this.players().map((player) => player.avatar);
+    return CHARACTERS.filter((character) => !used.includes(character.avatar));
+  });
+
+  standings = computed<PlayerStanding[]>(() =>
+    this.players()
+      .map((player) => {
+        const playerMatches = this.matches().filter((match) =>
+          match.results.some((result) => result.playerId === player.id),
+        );
+        const wins = playerMatches.filter((match) => this.matchService.winnerOf(match) === player.id).length;
+        const played = playerMatches.length;
+        return { player, wins, played, winRate: played ? Math.round((wins / played) * 100) : 0 };
+      })
+      .sort((standingA, standingB) => standingA.player.name.localeCompare(standingB.player.name, 'pt')),
+  );
+
+  ngOnInit(): void {
+    this.loadPlayers();
+  }
+
+  loadPlayers(): void {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    forkJoin({
+      players: this.playerService.getAll(),
+      matches: this.matchService.getAll(),
+    }).subscribe({
+      next: ({ players, matches }) => {
+        this.players.set(players);
+        this.matches.set(matches);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.errorMessage.set('Não foi possível carregar os jogadores. Confirme que a API está a correr.');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  showError(field: keyof typeof this.form.controls, error: string): boolean {
+    const control = this.form.controls[field];
+    return control.touched && control.hasError(error);
+  }
+
+  addPlayer(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const values = this.form.getRawValue();
+    this.isSaving.set(true);
+    this.saveError.set('');
+
+    this.playerService.create({ name: values.name.trim(), avatar: values.avatar as PlayerAvatar }).subscribe({
+      next: (created) => {
+        this.players.update((players) => [...players, created]);
+        this.form.reset();
+        this.isSaving.set(false);
+      },
+      error: () => {
+        this.saveError.set('Não foi possível adicionar o jogador. Confirme que a API está a correr.');
+        this.isSaving.set(false);
+      },
+    });
+  }
+
+  askDelete(id: number): void {
+    this.confirmingDeleteId.set(id);
+    this.deleteError.set('');
+  }
+
+  cancelDelete(): void {
+    this.confirmingDeleteId.set(null);
+  }
+
+  deletePlayer(id: number): void {
+    this.isDeleting.set(true);
+    this.deleteError.set('');
+
+    this.playerService.delete(id).subscribe({
+      next: () => {
+        this.players.update((players) => players.filter((player) => player.id !== id));
+        this.confirmingDeleteId.set(null);
+        this.isDeleting.set(false);
+      },
+      error: () => {
+        this.deleteError.set('Não foi possível remover o jogador. Confirme que a API está a correr.');
+        this.isDeleting.set(false);
+      },
+    });
+  }
+}

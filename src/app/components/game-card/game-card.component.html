@@ -1,19 +1,19 @@
 <button class="card" type="button" (click)="onClick()">
-  <div class="lid" [style.background-color]="color">
-    @if (game.image) {
-      <img [src]="game.image" [alt]="'Caixa do jogo ' + game.name" />
+  <div class="lid" [style.background-color]="color()">
+    @if (game().image) {
+      <img [src]="game().image" [alt]="'Caixa do jogo ' + game().name" />
     }
-    <span class="cat">{{ game.category }}</span>
+    <span class="cat">{{ game().category }}</span>
   </div>
 
   <div class="body">
-    <h3>{{ game.name }}</h3>
+    <h3>{{ game().name }}</h3>
     <p class="specs">
-      <span>{{ game.minPlayers }}–{{ game.maxPlayers }} jogadores</span>
-      <span>{{ game.duration }} min</span>
+      <span>{{ game().minPlayers }}–{{ game().maxPlayers }} jogadores</span>
+      <span>{{ game().duration }} min</span>
     </p>
     <p class="played">
-      {{ timesPlayed }} {{ timesPlayed === 1 ? 'partida' : 'partidas' }}
+      {{ timesPlayed() }} {{ timesPlayed() === 1 ? 'partida' : 'partidas' }}
     </p>
 
   </div>

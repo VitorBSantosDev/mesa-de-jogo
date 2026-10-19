@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { Game, GameCategory } from '../../models/game.model';
 
 @Component({
@@ -8,10 +8,10 @@ import { Game, GameCategory } from '../../models/game.model';
 })
 
 export class GameCardComponent {
-  @Input({ required: true }) game!: Game;
-  @Input() timesPlayed = 0;
+  game = input.required<Game>();
+  timesPlayed = input(0);
 
-  @Output() open = new EventEmitter<number>();
+  open = output<number>();
 
   private categoryColors: Record<GameCategory, string> = {
     'Estratégia': '#4a55c4',
@@ -22,11 +22,9 @@ export class GameCardComponent {
     'Cartas': '#7a5bc4',
   };
 
-  get color(): string {
-    return this.categoryColors[this.game.category];
-  }
+  color = computed(() => this.categoryColors[this.game().category]);
 
   onClick(): void {
-    this.open.emit(this.game.id);
+    this.open.emit(this.game().id);
   }
 }
