@@ -14,6 +14,18 @@
   --shadow: 0 1px 2px rgb(60 40 15 / .1), 0 6px 14px -6px rgb(60 40 15 / .25);
   --f-display: 'Cinzel', Georgia, serif;
   --f-body: 'EB Garamond', Garamond, Georgia, serif;
+  --char-gandalf: #5f6670;
+  --char-sauron: #b3312a;
+  --char-frodo: #3d7a3a;
+  --char-aragorn: #2f5a9e;
+  --char-legolas: #5f8a14;
+  --char-gimli: #7a4f26;
+  --char-galadriel: #a77a10;
+  --char-pippin: #c0601c;
+  --char-arwen: #1f7a76;
+  --char-boromir: #84203c;
+  --char-sam: #6d3f9e;
+  --char-merry: #a3366e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,6 +42,18 @@
     --gold: #e2b856;
     --danger: #ff8270;
     --ok: #86cc7a;
+    --char-gandalf: #b9c0c9;
+    --char-sauron: #ff8270;
+    --char-frodo: #86cc7a;
+    --char-aragorn: #86aef0;
+    --char-legolas: #b6e070;
+    --char-gimli: #d9a875;
+    --char-galadriel: #f0c450;
+    --char-pippin: #ffa35e;
+    --char-arwen: #5fcfc8;
+    --char-boromir: #f07d9a;
+    --char-sam: #c39cf0;
+    --char-merry: #f08ac0;
   }
 }
 
