@@ -168,6 +168,21 @@
           "score": 105
         }
       ]
+    },
+    {
+      "gameId": 5,
+      "date": "2026-10-20",
+      "results": [
+        {
+          "playerId": 2,
+          "score": 100
+        },
+        {
+          "playerId": 3,
+          "score": 200
+        }
+      ],
+      "id": 6
     }
   ]
 }
