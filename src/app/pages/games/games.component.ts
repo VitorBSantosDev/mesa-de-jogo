@@ -57,7 +57,7 @@ export class GamesComponent implements OnInit {
     });
   }
 
-  timesPlayed(gameId: number): number {
+  countMatches(gameId: number): number {
     return this.matches().filter((match) => match.gameId === gameId).length;
   }
 
@@ -73,7 +73,7 @@ export class GamesComponent implements OnInit {
     );
 
     return [...gamesList].sort((gameA, gameB) => {
-      if (sortBy === 'played') return this.timesPlayed(gameB.id) - this.timesPlayed(gameA.id);
+      if (sortBy === 'played') return this.countMatches(gameB.id) - this.countMatches(gameA.id);
       if (sortBy === 'duration') return gameA.duration - gameB.duration;
       return gameA.name.localeCompare(gameB.name, 'pt');
     });

@@ -46,7 +46,7 @@
 
   <div class="grid">
     @for (game of filteredGames(); track game.id) {
-      <app-game-card [game]="game" [timesPlayed]="timesPlayed(game.id)" (open)="goToGame($event)" />
+      <app-game-card [game]="game" [timesPlayed]="countMatches(game.id)" (open)="goToGame($event)" />
     } @empty {
       <p class="state">
         @if (games().length) {

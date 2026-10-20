@@ -21,7 +21,7 @@ export class MatchService {
     return this.http.post<Match>(this.url, match);
   }
 
-  winnerOf(match: Match): number {
+  getWinnerId(match: Match): number {
     const best = match.results.reduce((playerA, playerB) => (playerB.score > playerA.score ? playerB : playerA));
     return best.playerId;
   }

@@ -56,7 +56,7 @@ export class GameDetailComponent implements OnInit {
     });
   }
 
-  playerName(id: number): string {
+  getPlayerName(id: number): string {
     return this.players().find((player) => player.id === id)?.name ?? 'Jogador removido';
   }
 
@@ -64,7 +64,7 @@ export class GameDetailComponent implements OnInit {
     this.players()
       .map((player) => ({
         player,
-        wins: this.matches().filter((match) => this.matchService.winnerOf(match) === player.id).length,
+        wins: this.matches().filter((match) => this.matchService.getWinnerId(match) === player.id).length,
       }))
       .filter((player) => player.wins > 0)
       .sort((playerA, playerB) => playerB.wins - playerA.wins),
@@ -82,7 +82,7 @@ export class GameDetailComponent implements OnInit {
     return best;
   });
 
-  ranked(match: Match): MatchResult[] {
+  sortByScore(match: Match): MatchResult[] {
     return [...match.results].sort((playerA, playerB) => playerB.score - playerA.score);
   }
 

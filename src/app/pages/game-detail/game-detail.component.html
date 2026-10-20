@@ -32,7 +32,7 @@
       @if (record(); as best) {
         <p class="record">{{ best.result.score }} pontos</p>
         <p class="muted">
-          {{ playerName(best.result.playerId) }}, em {{ best.date | date: 'd MMM y' }}
+          {{ getPlayerName(best.result.playerId) }}, em {{ best.date | date: 'd MMM y' }}
         </p>
       } @else {
         <p class="muted">Sem partidas registadas.</p>
@@ -45,9 +45,9 @@
     <article class="match box">
       <span class="date">{{ match.date | date: 'd MMM y' }}</span>
       <ol>
-        @for (result of ranked(match); track result.playerId; let first = $first) {
+        @for (result of sortByScore(match); track result.playerId; let first = $first) {
           <li [class.winner]="first">
-            {{ playerName(result.playerId) }} <span class="score">{{ result.score }}</span>
+            {{ getPlayerName(result.playerId) }} <span class="score">{{ result.score }}</span>
           </li>
         }
       </ol>
