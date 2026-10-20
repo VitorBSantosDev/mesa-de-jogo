@@ -75,7 +75,7 @@
         <div class="info">
           <h3>{{ standing.player.name }}</h3>
           <span class="muted">
-            {{ characterName(standing.player.avatar) }} ·
+            {{ getCharacterName(standing.player.avatar) }} ·
             {{ standing.played }} {{ standing.played === 1 ? 'partida' : 'partidas' }} ·
             {{ standing.wins }} {{ standing.wins === 1 ? 'vitória' : 'vitórias' }}
           </span>
@@ -83,11 +83,14 @@
 
         <div class="card-actions">
           @if (standing.played > 0) {
+            <a class="btn small" routerLink="/partidas" [queryParams]="{ jogador: standing.player.id }">
+              Ver partidas
+            </a>
             <small class="hint">Tem partidas registadas, por isso não pode ser removido.</small>
           } @else if (confirmingDeleteId() === standing.player.id) {
             <button type="button" class="btn danger-solid small" [disabled]="isDeleting()"
-                (click)="deletePlayer(standing.player.id)">
-                {{ isDeleting() ? 'A remover…' : 'Remover' }}
+              (click)="deletePlayer(standing.player.id)">
+              {{ isDeleting() ? 'A remover…' : 'Remover' }}
             </button>
             <button type="button" class="btn small" [disabled]="isDeleting()" (click)="cancelDelete()">
               Manter

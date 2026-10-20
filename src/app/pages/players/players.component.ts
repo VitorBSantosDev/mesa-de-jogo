@@ -6,12 +6,13 @@ import { MatchService } from '../../services/match.service';
 import { Player, PlayerAvatar } from '../../models/player.model';
 import { Match } from '../../models/match.model';
 import { PlayerStanding } from '../../models/player-stats.model';
-import { CHARACTERS, characterName } from '../../models/characters.model';
+import { CHARACTERS, getCharacterName } from '../../models/characters.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-players',
-  imports: [ReactiveFormsModule, CharacterIconComponent],
+  imports: [ReactiveFormsModule, RouterLink, CharacterIconComponent],
   templateUrl: './players.component.html',
   styleUrl: './players.component.css',
 })
@@ -21,7 +22,7 @@ export class PlayersComponent implements OnInit {
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
 
-  characterName = characterName;
+  getCharacterName = getCharacterName;
   maxPlayers = CHARACTERS.length;
 
   players = signal<Player[]>([]);
@@ -59,7 +60,7 @@ export class PlayersComponent implements OnInit {
         const playerMatches = this.matches().filter((match) =>
           match.results.some((result) => result.playerId === player.id),
         );
-        const wins = playerMatches.filter((match) => this.matchService.winnerOf(match) === player.id).length;
+        const wins = playerMatches.filter((match) => this.matchService.getWinnerId(match) === player.id).length;
         const played = playerMatches.length;
         return { player, wins, played, winRate: played ? Math.round((wins / played) * 100) : 0 };
       })

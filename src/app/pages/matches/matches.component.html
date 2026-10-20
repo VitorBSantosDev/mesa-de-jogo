@@ -1,1 +1,82 @@
-<p>matches works!</p>
+<div class="head">
+  <h1>Partidas</h1>
+</div>
+
+@if (isLoading()) {
+  <p class="state">A carregar partidas…</p>
+} @else if (errorMessage()) {
+  <div class="state error">
+    <p>{{ errorMessage() }}</p>
+    <button class="btn" type="button" (click)="loadMatches()">Tentar novamente</button>
+  </div>
+} @else {
+  <div class="filters box">
+    <label class="field">
+      <span>Jogo</span>
+      <select [(ngModel)]="gameFilter">
+        <option [ngValue]="null">Todos</option>
+        @for (game of sortedGames(); track game.id) {
+          <option [ngValue]="game.id">{{ game.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Jogador</span>
+      <select [(ngModel)]="playerFilter">
+        <option [ngValue]="null">Todos</option>
+        @for (player of sortedPlayers(); track player.id) {
+          <option [ngValue]="player.id">{{ player.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="count">
+    <span>{{ filteredMatches().length }} de {{ matches().length }} partidas</span>
+    @if (hasFilters()) {
+      <button class="btn small" type="button" (click)="clearFilters()">Limpar filtros</button>
+    }
+  </div>
+
+  <div class="list">
+    @for (match of filteredMatches(); track match.id) {
+      <article class="match box">
+        <div class="date">
+          <span class="day">{{ match.date | date: 'd' }}</span>
+          <span class="month">{{ match.date | date: 'MMM y' }}</span>
+        </div>
+
+        <div>
+          <a class="game" [routerLink]="['/jogos', match.gameId]">{{ getGameName(match.gameId) }}</a>
+
+          <ol class="results">
+            @for (result of sortByScore(match); track result.playerId; let first = $first, index = $index) {
+              @let player = findPlayer(result.playerId);
+              <li [class.winner]="first">
+                @if (first) {
+                  <app-winner-ring />
+                } @else {
+                  <span class="position">{{ index + 1 }}.º</span>
+                }
+                @if (player) {
+                  <app-character-icon [avatar]="player.avatar" />
+                }
+                <span class="name">{{ player?.name ?? 'Jogador removido' }}</span>
+                <span class="score">{{ result.score }}</span>
+              </li>
+            }
+          </ol>
+        </div>
+      </article>
+    } @empty {
+      <p class="state">
+        @if (matches().length) {
+          Nenhuma partida corresponde aos filtros.
+        } @else {
+          Ainda não há partidas. Registe a primeira.
+        }
+      </p>
+    }
+  </div>
+}
