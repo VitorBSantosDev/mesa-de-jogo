@@ -1,1 +1,140 @@
-<p>match-new works!</p>
+<a routerLink="/partidas" class="back">← Voltar às partidas</a>
+<h1>Registar partida</h1>
+
+@if (isLoading()) {
+  <p class="state">A carregar…</p>
+} @else if (errorMessage()) {
+  <div class="state error">
+    <p>{{ errorMessage() }}</p>
+    <button class="btn" type="button" (click)="loadData()">Tentar novamente</button>
+  </div>
+} @else {
+  <div class="layout">
+    <form class="box form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="columns">
+        <label class="field">
+          <span>Jogo</span>
+          <select formControlName="gameId">
+            <option [ngValue]="null" disabled>Escolha o jogo</option>
+            @for (game of sortedGames(); track game.id) {
+              <option [ngValue]="game.id">{{ game.name }} ({{ game.minPlayers }}–{{ game.maxPlayers }})</option>
+            }
+          </select>
+          @if (showError('gameId', 'required')) {
+            <small class="error">Escolha o jogo.</small>
+          }
+        </label>
+
+        <label class="field">
+          <span>Data</span>
+          <input type="date" formControlName="date" [max]="today" />
+          @if (showError('date', 'required')) {
+            <small class="error">Indique a data da partida.</small>
+          } @else if (showError('date', 'future')) {
+            <small class="error">A data não pode ser no futuro.</small>
+          }
+        </label>
+      </div>
+
+      <fieldset class="field">
+        <legend>Quem jogou</legend>
+        <div class="picks">
+          @for (player of sortedPlayers(); track player.id) {
+            <label class="pick">
+              <input type="checkbox" [checked]="isSelected(player.id)" (change)="togglePlayer(player.id)" />
+              <span>
+                <app-character-icon [avatar]="player.avatar" />
+                {{ player.name }}
+              </span>
+            </label>
+          }
+        </div>
+        @if (showPlayersError('notEnoughPlayers')) {
+          <small class="error">Escolha pelo menos 2 jogadores.</small>
+        } @else if (showPlayersError('playersRange')) {
+          @let game = getSelectedGame();
+          <small class="error">
+            O {{ game?.name }} joga-se com {{ game?.minPlayers }} a {{ game?.maxPlayers }} jogadores.
+            Escolheu {{ results.length }}.
+          </small>
+        }
+      </fieldset>
+
+      <div class="field">
+        <span>Pontuação final</span>
+        <div class="scores" formArrayName="results">
+          @for (result of results.controls; track result.controls.playerId.value; let index = $index) {
+            @let player = findPlayer(result.controls.playerId.value);
+            <label class="score" [formGroupName]="index">
+              <span class="player">
+                @if (player) {
+                  <app-character-icon [avatar]="player.avatar" />
+                }
+                {{ player?.name }}
+              </span>
+              <input type="number" formControlName="score" min="0" step="1" inputmode="numeric" placeholder="Pontos" />
+            </label>
+          } @empty {
+            <p class="hint">Escolha primeiro quem jogou.</p>
+          }
+        </div>
+        @if (showScoreError('required')) {
+          <small class="error">Preencha a pontuação de todos os jogadores.</small>
+        } @else if (showScoreError('min') || showScoreError('pattern')) {
+          <small class="error">As pontuações têm de ser números inteiros, 0 ou mais.</small>
+        } @else if (form.hasError('tie')) {
+          <small class="error">
+            Há um empate no 1.º lugar. Aplique a regra de desempate do jogo e ajuste as pontuações.
+          </small>
+        }
+      </div>
+
+      @if (saveError()) {
+        <p class="error">{{ saveError() }}</p>
+      }
+
+      <div class="actions">
+        <button type="submit" class="btn primary" [disabled]="isSaving()">
+          {{ isSaving() ? 'A guardar…' : 'Guardar partida' }}
+        </button>
+        <a routerLink="/partidas" class="btn">Cancelar</a>
+      </div>
+    </form>
+
+    <aside class="box preview">
+      <h2>Resultado</h2>
+
+      @if (previewGame(); as game) {
+        <p class="summary">{{ game.name }} · {{ formValue().date | date: 'd MMM y' }}</p>
+      } @else {
+        <p class="hint">Escolha o jogo e os jogadores para ver o resultado.</p>
+      }
+
+      @if (previewWinnerId(); as winnerId) {
+        @let winner = findPlayer(winnerId);
+        <p class="winner">
+          <app-winner-ring />
+          {{ winner?.name }}
+        </p>
+      }
+
+      @if (previewResults().length) {
+        <ol class="podium">
+          @for (result of previewResults(); track result.playerId; let index = $index) {
+            @let player = findPlayer(result.playerId);
+            <li>
+              <span class="player">
+                <span class="position">{{ index + 1 }}.º</span>
+                @if (player) {
+                  <app-character-icon [avatar]="player.avatar" />
+                }
+                {{ player?.name }}
+              </span>
+              <span class="points">{{ result.score }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </aside>
+  </div>
+}
