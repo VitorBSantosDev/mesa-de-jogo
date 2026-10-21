@@ -8,8 +8,9 @@ import { PlayerService } from '../../services/player.service';
 import { MatchService } from '../../services/match.service';
 import { Game } from '../../models/game.model';
 import { Player } from '../../models/player.model';
-import { Match, MatchResult } from '../../models/match.model';
+import { Match } from '../../models/match.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
+import { sortByName } from '../../utils/sort.utils';
 import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.component';
 
 @Component({
@@ -23,7 +24,7 @@ export class MatchesComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private gameService = inject(GameService);
   private playerService = inject(PlayerService);
-  private matchService = inject(MatchService);
+  protected matchService = inject(MatchService);
 
   games = signal<Game[]>([]);
   players = signal<Player[]>([]);
@@ -35,13 +36,9 @@ export class MatchesComponent implements OnInit {
   gameFilter = signal<number | null>(null);
   playerFilter = signal<number | null>(null);
 
-  sortedGames = computed(() =>
-    [...this.games()].sort((gameA, gameB) => gameA.name.localeCompare(gameB.name, 'pt')),
-  );
+  sortedGames = computed(() => sortByName(this.games()));
 
-  sortedPlayers = computed(() =>
-    [...this.players()].sort((playerA, playerB) => playerA.name.localeCompare(playerB.name, 'pt')),
-  );
+  sortedPlayers = computed(() => sortByName(this.players()));
 
   filteredMatches = computed(() => {
     const gameId = this.gameFilter();
@@ -102,9 +99,5 @@ export class MatchesComponent implements OnInit {
 
   findPlayer(id: number): Player | undefined {
     return this.players().find((player) => player.id === id);
-  }
-
-  sortByScore(match: Match): MatchResult[] {
-    return [...match.results].sort((resultA, resultB) => resultB.score - resultA.score);
   }
 }

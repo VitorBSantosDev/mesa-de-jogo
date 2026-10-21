@@ -51,7 +51,7 @@
           <a class="game" [routerLink]="['/jogos', match.gameId]">{{ getGameName(match.gameId) }}</a>
 
           <ol class="results">
-            @for (result of sortByScore(match); track result.playerId; let first = $first, index = $index) {
+            @for (result of matchService.sortByScore(match); track result.playerId; let first = $first, index = $index) {
               @let player = findPlayer(result.playerId);
               <li [class.winner]="first">
                 @if (first) {

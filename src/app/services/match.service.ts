@@ -2,7 +2,7 @@ import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Match, NewMatch } from '../models/match.model';
+import { Match, MatchResult, NewMatch } from '../models/match.model';
 
 @Service()
 export class MatchService {
@@ -24,5 +24,9 @@ export class MatchService {
   getWinnerId(match: Match): number {
     const best = match.results.reduce((playerA, playerB) => (playerB.score > playerA.score ? playerB : playerA));
     return best.playerId;
+  }
+
+  sortByScore(match: Match): MatchResult[] {
+    return [...match.results].sort((resultA, resultB) => resultB.score - resultA.score);
   }
 }

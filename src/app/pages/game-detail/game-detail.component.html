@@ -45,7 +45,7 @@
     <article class="match box">
       <span class="date">{{ match.date | date: 'd MMM y' }}</span>
       <ol>
-        @for (result of sortByScore(match); track result.playerId; let first = $first) {
+        @for (result of matchService.sortByScore(match); track result.playerId; let first = $first) {
           <li [class.winner]="first">
             {{ getPlayerName(result.playerId) }} <span class="score">{{ result.score }}</span>
           </li>

@@ -20,6 +20,7 @@ import { NewMatch } from '../../models/match.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.component';
 import { getTodayIso } from '../../utils/date.utils';
+import { sortByName } from '../../utils/sort.utils';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -52,13 +53,9 @@ export class MatchNewComponent implements OnInit {
   saveError = signal('');
   submitted = signal(false);
 
-  sortedGames = computed(() =>
-    [...this.games()].sort((gameA, gameB) => gameA.name.localeCompare(gameB.name, 'pt')),
-  );
+  sortedGames = computed(() => sortByName(this.games()));
 
-  sortedPlayers = computed(() =>
-    [...this.players()].sort((playerA, playerB) => playerA.name.localeCompare(playerB.name, 'pt')),
-  );
+  sortedPlayers = computed(() => sortByName(this.players()));
 
   dateNotInFuture = (control: AbstractControl) => {
     return control.value > this.today ? { future: true } : null;

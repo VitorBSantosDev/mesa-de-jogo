@@ -21,7 +21,7 @@ export class GameDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private gameService = inject(GameService);
-  private matchService = inject(MatchService);
+  protected matchService = inject(MatchService);
   private playerService = inject(PlayerService);
 
   game = signal<Game | undefined>(undefined);
@@ -81,10 +81,6 @@ export class GameDetailComponent implements OnInit {
     }
     return best;
   });
-
-  sortByScore(match: Match): MatchResult[] {
-    return [...match.results].sort((playerA, playerB) => playerB.score - playerA.score);
-  }
 
   askDelete(): void {
     this.isConfirmingDelete.set(true);
