@@ -78,6 +78,14 @@ button, input, select, textarea {
   font: inherit;
 }
 
+select {
+  cursor: pointer;
+}
+
+select:disabled {
+  cursor: not-allowed;
+}
+
 h1, h2, h3, .btn, nav a {
   font-family: var(--f-display);
   letter-spacing: .04em;
@@ -143,4 +151,162 @@ h3 {
     inset 0 0 0 3px var(--surface),
     inset 0 0 0 4px color-mix(in srgb, var(--gold) 22%, transparent),
     var(--shadow);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, var(--gold), transparent 60%) 1;
+}
+
+.head h1 {
+  margin: 0;
+}
+
+.back {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.state {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.state.error {
+  border-style: solid;
+  border-color: var(--danger);
+  color: var(--ink);
+}
+
+.error {
+  color: var(--danger);
+  font-size: .85rem;
+  margin: 0;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: .85rem;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn.small {
+  padding: 4px 10px;
+  font-size: .75rem;
+  letter-spacing: .03em;
+}
+
+.btn.danger {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+}
+
+.btn.danger-solid {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--surface);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.field > span,
+.field legend {
+  font-family: var(--f-display);
+  font-size: .75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0;
+}
+
+.field legend {
+  margin-bottom: 6px;
+}
+
+.field select,
+.field input[type='text'],
+.field input[type='search'],
+.field input[type='number'],
+.field input[type='date'] {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--line));
+  border-radius: 4px;
+  padding: 9px 11px;
+  height: 44px;
+}
+
+.field select.ng-invalid.ng-touched,
+.field input.ng-invalid.ng-touched {
+  border-color: var(--danger);
+}
+
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pick {
+  position: relative;
+  cursor: pointer;
+}
+
+.pick input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.pick span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  font-weight: 600;
+}
+
+.pick input:checked + span {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 16%, var(--surface));
+}
+
+.pick input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
