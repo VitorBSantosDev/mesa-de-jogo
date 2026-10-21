@@ -1,24 +1,58 @@
 import { Service, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { Observable, map, switchMap } from 'rxjs';
+import { SupabaseService } from './supabase.service';
 import { Match, MatchResult, NewMatch } from '../models/match.model';
+
+const MATCH_COLUMNS = 'id, game_id, date, match_results(player_id, score)';
+
+interface MatchRow {
+  id: number;
+  game_id: number;
+  date: string;
+  match_results: { player_id: number; score: number }[];
+}
+
+function mapToMatch(row: MatchRow): Match {
+  return {
+    id: row.id,
+    gameId: row.game_id,
+    date: row.date,
+    results: row.match_results.map((result) => ({ playerId: result.player_id, score: result.score })),
+  };
+}
 
 @Service()
 export class MatchService {
-  private http = inject(HttpClient);
-  private url = `${environment.apiUrl}/matches`;
+  private supabase = inject(SupabaseService);
 
   getAll(): Observable<Match[]> {
-    return this.http.get<Match[]>(this.url);
+    const request = this.supabase.client.from('matches').select(MATCH_COLUMNS);
+    return this.supabase.execute(request).pipe(map((rows) => rows.map(mapToMatch)));
   }
 
   getByGame(gameId: number): Observable<Match[]> {
-    return this.http.get<Match[]>(this.url, { params: { gameId } });
+    const request = this.supabase.client.from('matches').select(MATCH_COLUMNS).eq('game_id', gameId);
+    return this.supabase.execute(request).pipe(map((rows) => rows.map(mapToMatch)));
   }
 
   create(match: NewMatch): Observable<Match> {
-    return this.http.post<Match>(this.url, match);
+    const insertMatch = this.supabase.client
+      .from('matches')
+      .insert({ game_id: match.gameId, date: match.date })
+      .select('id')
+      .single();
+
+    return this.supabase.execute(insertMatch).pipe(
+      switchMap(({ id }) => {
+        const results = match.results.map((result) => ({
+          match_id: id,
+          player_id: result.playerId,
+          score: result.score,
+        }));
+        const insertResults = this.supabase.client.from('match_results').insert(results);
+        return this.supabase.execute(insertResults).pipe(map(() => ({ ...match, id })));
+      }),
+    );
   }
 
   getWinnerId(match: Match): number {

@@ -1,23 +1,51 @@
 import { Service, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { Player } from '../models/player.model';
+import { Observable, map, switchMap } from 'rxjs';
+import { SupabaseService } from './supabase.service';
+import { Player, PlayerAvatar } from '../models/player.model';
+
+const PLAYER_COLUMNS = 'id, name, characters(avatar)';
+
+interface PlayerRow {
+  id: number;
+  name: string;
+  characters: { avatar: string };
+}
+
+function mapToPlayer(row: PlayerRow): Player {
+  return {
+    id: row.id,
+    name: row.name,
+    avatar: row.characters.avatar as PlayerAvatar,
+  };
+}
 
 @Service()
 export class PlayerService {
-  private http = inject(HttpClient);
-  private url = `${environment.apiUrl}/players`;
+  private supabase = inject(SupabaseService);
 
   getAll(): Observable<Player[]> {
-    return this.http.get<Player[]>(this.url);
+    const request = this.supabase.client.from('players').select(PLAYER_COLUMNS);
+    return this.supabase.execute(request).pipe(map((rows) => rows.map(mapToPlayer)));
   }
 
   create(player: Omit<Player, 'id'>): Observable<Player> {
-    return this.http.post<Player>(this.url, player);
+    const findCharacter = this.supabase.client.from('characters').select('id').eq('avatar', player.avatar).single();
+
+    return this.supabase.execute(findCharacter).pipe(
+      switchMap((character) => {
+        const request = this.supabase.client
+          .from('players')
+          .insert({ name: player.name, character_id: character.id })
+          .select(PLAYER_COLUMNS)
+          .single();
+        return this.supabase.execute(request);
+      }),
+      map(mapToPlayer),
+    );
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`);
+    const request = this.supabase.client.from('players').delete().eq('id', id);
+    return this.supabase.execute(request).pipe(map(() => undefined));
   }
 }
