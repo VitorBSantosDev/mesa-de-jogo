@@ -16,6 +16,17 @@ function mapToGame(row: Tables<'games'>): Game {
   };
 }
 
+function mapToGameRow(game: NewGame) {
+  return {
+    name: game.name,
+    category: game.category,
+    min_players: game.minPlayers,
+    max_players: game.maxPlayers,
+    duration: game.duration,
+    image: game.image,
+  };
+}
+
 @Service()
 export class GameService {
   private supabase = inject(SupabaseService);
@@ -31,15 +42,12 @@ export class GameService {
   }
 
   create(game: NewGame): Observable<Game> {
-    const row = {
-      name: game.name,
-      category: game.category,
-      min_players: game.minPlayers,
-      max_players: game.maxPlayers,
-      duration: game.duration,
-      image: game.image,
-    };
-    const request = this.supabase.client.from('games').insert(row).select().single();
+    const request = this.supabase.client.from('games').insert(mapToGameRow(game)).select().single();
+    return this.supabase.execute(request).pipe(map(mapToGame));
+  }
+
+  update(id: number, game: NewGame): Observable<Game> {
+    const request = this.supabase.client.from('games').update(mapToGameRow(game)).eq('id', id).select().single();
     return this.supabase.execute(request).pipe(map(mapToGame));
   }
 

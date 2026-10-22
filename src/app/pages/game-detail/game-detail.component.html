@@ -1,4 +1,9 @@
-<a routerLink="/jogos" class="back">← Voltar aos jogos</a>
+<div class="top-bar">
+  <a routerLink="/jogos" class="back">← Voltar aos jogos</a>
+  @if (game(); as game) {
+    <a class="btn" [routerLink]="['/jogos', game.id, 'editar']">Editar jogo</a>
+  }
+</div>
 
 @if (isLoading()) {
   <p class="state">A carregar…</p>

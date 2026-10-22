@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   NonNullableFormBuilder,
@@ -10,6 +10,7 @@ import { GameService } from '../../services/game.service';
 import { Game, GameCategory, GAME_CATEGORIES, NewGame } from '../../models/game.model';
 import { GameCardComponent } from '../../components/game-card/game-card.component';
 import { resizeImage } from '../../utils/image.utils';
+import { findById } from '../../utils/find.utils';
 
 const BYTES_PER_MB = 1024 * 1024;
 const MAX_IMAGE_MB = 5;
@@ -26,11 +27,16 @@ export class GameNewComponent implements OnInit {
   private formBuilder = inject(NonNullableFormBuilder);
   private gameService = inject(GameService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   categories = GAME_CATEGORIES;
   maxImageMb = MAX_IMAGE_MB;
 
   private existingNames: string[] = [];
+
+  editingId = signal<number | null>(null);
+  isLoading = signal(true);
+  loadError = signal('');
 
   isSaving = signal(false);
   saveError = signal('');
@@ -65,9 +71,37 @@ export class GameNewComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.gameService.getAll().subscribe((games) => {
-      this.existingNames = games.map((game) => game.name);
-      this.form.controls.name.updateValueAndValidity();
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) this.editingId.set(id);
+
+    this.gameService.getAll().subscribe({
+      next: (games) => {
+        this.existingNames = games.filter((game) => game.id !== id).map((game) => game.name);
+
+        if (id) {
+          const game = findById(games, id);
+          if (!game) {
+            this.loadError.set('Não encontrámos este jogo. Pode ter sido removido.');
+            this.isLoading.set(false);
+            return;
+          }
+          this.form.setValue({
+            name: game.name,
+            category: game.category,
+            minPlayers: game.minPlayers,
+            maxPlayers: game.maxPlayers,
+            duration: game.duration,
+            image: game.image,
+          });
+        }
+
+        this.form.controls.name.updateValueAndValidity();
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.loadError.set('Não foi possível carregar os jogos. Verifique a ligação e tente novamente.');
+        this.isLoading.set(false);
+      },
     });
   }
 
@@ -138,13 +172,16 @@ export class GameNewComponent implements OnInit {
       image: values.image,
     };
 
+    const editingId = this.editingId();
+    const request = editingId === null ? this.gameService.create(newGame) : this.gameService.update(editingId, newGame);
+
     this.isSaving.set(true);
     this.saveError.set('');
 
-    this.gameService.create(newGame).subscribe({
-      next: (created) => this.router.navigate(['/jogos', created.id]),
+    request.subscribe({
+      next: (saved) => this.router.navigate(['/jogos', saved.id]),
       error: () => {
-        this.saveError.set('Não foi possível guardar o jogo. Confirme que a API está a correr.');
+        this.saveError.set('Não foi possível guardar o jogo. Verifique a ligação e tente novamente.');
         this.isSaving.set(false);
       },
     });
