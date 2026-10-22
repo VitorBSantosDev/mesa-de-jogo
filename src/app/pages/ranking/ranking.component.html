@@ -59,18 +59,18 @@
             <thead>
               <tr>
                 <th class="position">#</th>
-                <th>Jogador</th>
+                <th class="player-column">Jogador</th>
                 <th class="number">Vitórias</th>
                 <th class="number">Partidas</th>
                 <th>% vitórias</th>
-                <th>Últimas {{ recentMatches }}</th>
+                <th class="recent-column">Últimas {{ recentMatches }}</th>
               </tr>
             </thead>
             <tbody>
               @for (row of ranking(); track row.player.id; let index = $index) {
                 <tr [class.first]="index === 0">
                   <td class="position">{{ index + 1 }}</td>
-                  <td>
+                  <td class="player-column">
                     <span class="player">
                       <app-character-icon [avatar]="row.player.avatar" />
                       {{ row.player.name }}
@@ -86,7 +86,7 @@
                       <span>{{ row.winRate }}%</span>
                     </div>
                   </td>
-                  <td>
+                  <td class="recent-column">
                     <span class="recent">
                       @for (won of row.recentWins; track $index) {
                         <i [class.win]="won" [title]="won ? 'Vitória' : 'Derrota'"></i>
