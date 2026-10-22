@@ -5,7 +5,7 @@
 } @else if (errorMessage()) {
   <p class="state error">{{ errorMessage() }}</p>
 } @else if (game(); as game) {
-  <h1>{{ game.name }}</h1>
+  <h1 class="page-title">{{ game.name }}</h1>
 
   <dl class="facts">
     <div><dt>Categoria</dt><dd>{{ game.category }}</dd></div>
