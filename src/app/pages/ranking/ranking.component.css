@@ -149,9 +149,13 @@ tr.first .position {
 
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   align-items: start;
+}
+
+.columns > section:first-child {
+  grid-column: span 2;
 }
 
 .champions {
@@ -198,6 +202,10 @@ tr.first .position {
 @media (max-width: 900px) {
   .columns {
     grid-template-columns: 1fr;
+  }
+
+  .columns > section:first-child {
+    grid-column: auto;
   }
 }
 
