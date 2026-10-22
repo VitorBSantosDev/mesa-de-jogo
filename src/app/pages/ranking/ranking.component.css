@@ -241,6 +241,11 @@ tr.first .position {
 
   .rate {
     min-width: 0;
+    justify-content: center;
+  }
+
+  .rate span {
+    text-align: center;
   }
 
   .track {
