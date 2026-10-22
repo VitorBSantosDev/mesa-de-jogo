@@ -10,6 +10,7 @@ import { Match } from '../../models/match.model';
 import { PlayerStanding } from '../../models/player-stats.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { sortByName } from '../../utils/sort.utils';
+import { findById } from '../../utils/find.utils';
 
 const MIN_MATCHES_FOR_RATE = 3;
 const RECENT_MATCHES = 5;
@@ -143,7 +144,6 @@ export class RankingComponent implements OnInit {
   }
 
   findPlayer(id: number): Player | undefined {
-    return this.players().find((player) => player.id === id);
+    return findById(this.players(), id);
   }
-
 }

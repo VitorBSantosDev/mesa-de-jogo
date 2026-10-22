@@ -9,6 +9,7 @@ import { Game } from '../../models/game.model';
 import { Match, MatchResult } from '../../models/match.model';
 import { Player } from '../../models/player.model';
 import { PlayerWins } from '../../models/player-stats.model';
+import { findById } from '../../utils/find.utils';
 
 @Component({
   selector: 'app-game-detail',
@@ -57,7 +58,7 @@ export class GameDetailComponent implements OnInit {
   }
 
   getPlayerName(id: number): string {
-    return this.players().find((player) => player.id === id)?.name ?? 'Jogador removido';
+    return findById(this.players(), id)?.name ?? 'Jogador removido';
   }
 
   winsByPlayer = computed<PlayerWins[]>(() =>
