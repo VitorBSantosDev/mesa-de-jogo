@@ -10,6 +10,9 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 800;
   font-size: 1.15rem;
   text-decoration: none;
@@ -17,6 +20,12 @@
   text-transform: uppercase;
   letter-spacing: .12em;
   color: var(--gold);
+}
+
+.brand img {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / .45));
 }
 
 nav { 
