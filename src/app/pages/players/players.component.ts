@@ -34,13 +34,17 @@ export class PlayersComponent implements OnInit {
   isSaving = signal(false);
   saveError = signal('');
 
+  editingId = signal<number | null>(null);
+
   confirmingDeleteId = signal<number | null>(null);
   isDeleting = signal(false);
   deleteError = signal('');
 
   nameIsUnique = (control: AbstractControl) => {
     const name = control.value.trim().toLowerCase();
-    const exists = this.players().some((player) => player.name.toLowerCase() === name);
+    const exists = this.players().some(
+      (player) => player.id !== this.editingId() && player.name.toLowerCase() === name,
+    );
     return exists ? { duplicate: true } : null;
   };
 
@@ -50,7 +54,9 @@ export class PlayersComponent implements OnInit {
   });
 
   availableCharacters = computed(() => {
-    const used = this.players().map((player) => player.avatar);
+    const used = this.players()
+      .filter((player) => player.id !== this.editingId())
+      .map((player) => player.avatar);
     return CHARACTERS.filter((character) => !used.includes(character.avatar));
   });
 
@@ -96,27 +102,58 @@ export class PlayersComponent implements OnInit {
     return control.touched && control.hasError(error);
   }
 
-  addPlayer(): void {
+  startEdit(player: Player): void {
+    this.editingId.set(player.id);
+    this.form.setValue({ name: player.name, avatar: player.avatar });
+    this.saveError.set('');
+    this.cancelDelete();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cancelEdit(): void {
+    this.editingId.set(null);
+    this.form.reset();
+    this.saveError.set('');
+  }
+
+  savePlayer(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     const values = this.form.getRawValue();
+    const player = { name: values.name.trim(), avatar: values.avatar as PlayerAvatar };
+    const editingId = this.editingId();
+
     this.isSaving.set(true);
     this.saveError.set('');
 
-    this.playerService.create({ name: values.name.trim(), avatar: values.avatar as PlayerAvatar }).subscribe({
-      next: (created) => {
-        this.players.update((players) => [...players, created]);
-        this.form.reset();
-        this.isSaving.set(false);
-      },
-      error: () => {
-        this.saveError.set('Não foi possível adicionar o jogador. Confirme que a API está a correr.');
-        this.isSaving.set(false);
-      },
-    });
+    if (editingId === null) {
+      this.playerService.create(player).subscribe({
+        next: (created) => {
+          this.players.update((players) => [...players, created]);
+          this.form.reset();
+          this.isSaving.set(false);
+        },
+        error: () => {
+          this.saveError.set('Não foi possível adicionar o jogador. Verifique a ligação e tente novamente.');
+          this.isSaving.set(false);
+        },
+      });
+    } else {
+      this.playerService.update(editingId, player).subscribe({
+        next: (updated) => {
+          this.players.update((players) => players.map((item) => (item.id === updated.id ? updated : item)));
+          this.cancelEdit();
+          this.isSaving.set(false);
+        },
+        error: () => {
+          this.saveError.set('Não foi possível guardar as alterações. Verifique a ligação e tente novamente.');
+          this.isSaving.set(false);
+        },
+      });
+    }
   }
 
   askDelete(id: number): void {

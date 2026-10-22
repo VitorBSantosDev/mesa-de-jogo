@@ -11,9 +11,9 @@
     <button class="btn" type="button" (click)="loadPlayers()">Tentar novamente</button>
   </div>
 } @else {
-  @if (availableCharacters().length) {
-    <form class="box add-form" [formGroup]="form" (ngSubmit)="addPlayer()" novalidate>
-      <h2>Adicionar jogador</h2>
+  @if (availableCharacters().length || editingId() !== null) {
+    <form class="box add-form" [formGroup]="form" (ngSubmit)="savePlayer()" novalidate>
+      <h2>{{ editingId() === null ? 'Adicionar jogador' : 'Editar jogador' }}</h2>
 
       <div class="form-row">
         <label class="field">
@@ -49,9 +49,16 @@
         </fieldset>
 
         <div class="submit">
-          <button type="submit" class="btn primary" [disabled]="isSaving() || form.invalid">
-            {{ isSaving() ? 'A adicionar…' : 'Adicionar jogador' }}
-          </button>
+          @if (editingId() === null) {
+            <button type="submit" class="btn primary" [disabled]="isSaving() || form.invalid">
+              {{ isSaving() ? 'A adicionar…' : 'Adicionar jogador' }}
+            </button>
+          } @else {
+            <button type="submit" class="btn primary" [disabled]="isSaving() || form.invalid">
+              {{ isSaving() ? 'A guardar…' : 'Guardar alterações' }}
+            </button>
+            <button type="button" class="btn" [disabled]="isSaving()" (click)="cancelEdit()">Cancelar</button>
+          }
         </div>
       </div>
 
@@ -86,6 +93,7 @@
             <a class="btn small" routerLink="/partidas" [queryParams]="{ jogador: standing.player.id }">
               Ver partidas
             </a>
+            <button type="button" class="btn small" (click)="startEdit(standing.player)">Editar</button>
             <small class="hint">Tem partidas registadas, por isso não pode ser removido.</small>
           } @else if (confirmingDeleteId() === standing.player.id) {
             <button type="button" class="btn danger-solid small" [disabled]="isDeleting()"
@@ -99,6 +107,7 @@
               <small class="error">{{ deleteError() }}</small>
             }
           } @else {
+            <button type="button" class="btn small" (click)="startEdit(standing.player)">Editar</button>
             <button type="button" class="btn danger small" (click)="askDelete(standing.player.id)">
               Remover
             </button>

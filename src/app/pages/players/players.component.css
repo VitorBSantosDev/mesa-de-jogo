@@ -35,6 +35,8 @@
 }
 
 .submit {
+  display: flex;
+  gap: 8px;
   padding-top: 27px;
 }
 

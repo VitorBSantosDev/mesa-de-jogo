@@ -29,13 +29,26 @@ export class PlayerService {
   }
 
   create(player: Omit<Player, 'id'>): Observable<Player> {
-    const findCharacter = this.supabase.client.from('characters').select('id').eq('avatar', player.avatar).single();
-
-    return this.supabase.execute(findCharacter).pipe(
-      switchMap((character) => {
+    return this.findCharacterId(player.avatar).pipe(
+      switchMap((characterId) => {
         const request = this.supabase.client
           .from('players')
-          .insert({ name: player.name, character_id: character.id })
+          .insert({ name: player.name, character_id: characterId })
+          .select(PLAYER_COLUMNS)
+          .single();
+        return this.supabase.execute(request);
+      }),
+      map(mapToPlayer),
+    );
+  }
+
+  update(id: number, player: Omit<Player, 'id'>): Observable<Player> {
+    return this.findCharacterId(player.avatar).pipe(
+      switchMap((characterId) => {
+        const request = this.supabase.client
+          .from('players')
+          .update({ name: player.name, character_id: characterId })
+          .eq('id', id)
           .select(PLAYER_COLUMNS)
           .single();
         return this.supabase.execute(request);
@@ -47,5 +60,10 @@ export class PlayerService {
   delete(id: number): Observable<void> {
     const request = this.supabase.client.from('players').delete().eq('id', id);
     return this.supabase.execute(request).pipe(map(() => undefined));
+  }
+
+  private findCharacterId(avatar: PlayerAvatar): Observable<number> {
+    const request = this.supabase.client.from('characters').select('id').eq('avatar', avatar).single();
+    return this.supabase.execute(request).pipe(map((character) => character.id));
   }
 }
