@@ -1,18 +1,32 @@
 <header class="appbar">
-  <a routerLink="/" class="brand">
+  <a routerLink="/" class="brand" (click)="closeMenu()">
     <img src="anel.svg" alt="" />
     Mesa de Jogo
   </a>
 
-  <nav>
-    @for (link of links; track link.path) {
-      <a
-        [routerLink]="link.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-      >{{ link.label }}</a>
-    }
-  </nav>
+  <button
+    type="button"
+    class="menu-toggle"
+    aria-controls="main-menu"
+    [attr.aria-expanded]="isMenuOpen()"
+    (click)="toggleMenu()"
+  >
+    <span class="sr-only">{{ isMenuOpen() ? 'Fechar menu' : 'Abrir menu' }}</span>
+    <span class="bars" aria-hidden="true"></span>
+  </button>
 
-  <a routerLink="/partidas/nova" class="btn primary">Registar partida</a>
+  <div id="main-menu" class="menu" [class.open]="isMenuOpen()">
+    <nav>
+      @for (link of links; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          (click)="closeMenu()"
+        >{{ link.label }}</a>
+      }
+    </nav>
+
+    <a routerLink="/partidas/nova" class="btn primary" (click)="closeMenu()">Registar partida</a>
+  </div>
 </header>
