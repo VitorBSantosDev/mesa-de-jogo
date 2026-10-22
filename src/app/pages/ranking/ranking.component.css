@@ -201,7 +201,7 @@ tr.first .position {
 
 @media (max-width: 900px) {
   .columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .columns > section:first-child {
@@ -212,5 +212,37 @@ tr.first .position {
 @media (max-width: 760px) {
   .tiles {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .recent-column {
+    display: none;
+  }
+
+  th,
+  td {
+    padding: 8px 5px;
+  }
+
+  th {
+    font-size: .65rem;
+    letter-spacing: .03em;
+  }
+
+  .position {
+    width: 22px;
+  }
+
+  .rate {
+    min-width: 0;
+  }
+
+  .track {
+    display: none;
+  }
+
+  .columns > section:first-child {
+    padding: 14px 12px;
   }
 }
