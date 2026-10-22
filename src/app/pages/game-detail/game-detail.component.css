@@ -62,34 +62,10 @@ h2 {
   margin: 4px 0 0;
 }
 
-.match {
+.list {
   display: flex;
-  gap: 16px;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-
-.date {
-  min-width: 90px;
-  color: var(--muted);
-}
-
-.match ol {
-  margin: 0;
-  padding-left: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 22px;
-}
-
-.winner {
-  font-weight: 700;
-  color: var(--gold);
-}
-
-.score {
-  color: var(--muted);
-  font-size: .9rem;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .danger-zone {

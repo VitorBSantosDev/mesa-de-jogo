@@ -41,34 +41,7 @@
 
   <div class="list">
     @for (match of filteredMatches(); track match.id) {
-      <article class="match box">
-        <div class="date">
-          <span class="day">{{ match.date | date: 'd' }}</span>
-          <span class="month">{{ match.date | date: 'MMM y' }}</span>
-        </div>
-
-        <div>
-          <a class="game" [routerLink]="['/jogos', match.gameId]">{{ getGameName(match.gameId) }}</a>
-
-          <ol class="results">
-            @for (result of matchService.sortByScore(match); track result.playerId; let first = $first, index = $index) {
-              @let player = findPlayer(result.playerId);
-              <li [class.winner]="first">
-                @if (first) {
-                  <app-winner-ring />
-                } @else {
-                  <span class="position">{{ index + 1 }}.º</span>
-                }
-                @if (player) {
-                  <app-character-icon [avatar]="player.avatar" />
-                }
-                <span class="name">{{ player?.name ?? 'Jogador removido' }}</span>
-                <span class="score">{{ result.score }}</span>
-              </li>
-            }
-          </ol>
-        </div>
-      </article>
+      <app-match-card [match]="match" [players]="players()" [gameName]="getGameName(match.gameId)" />
     } @empty {
       <p class="state">
         @if (matches().length) {
