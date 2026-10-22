@@ -1,1 +1,137 @@
-<p>ranking works!</p>
+<div class="head">
+  <h1>Classificação</h1>
+</div>
+
+@if (isLoading()) {
+  <p class="state">A carregar a classificação…</p>
+} @else if (errorMessage()) {
+  <div class="state error">
+    <p>{{ errorMessage() }}</p>
+    <button class="btn" type="button" (click)="loadRanking()">Tentar novamente</button>
+  </div>
+} @else {
+  <div class="tiles">
+    <a class="tile box" routerLink="/partidas">
+      <span class="label">Partidas registadas</span>
+      <span class="value">{{ matches().length }}</span>
+      <span class="link">Ver todas as partidas →</span>
+    </a>
+
+    @if (mostPlayedGame(); as top) {
+      <a class="tile box" [routerLink]="['/jogos', top.game.id]">
+        <span class="label">Jogo mais jogado</span>
+        <span class="value">{{ top.game.name }}</span>
+        <span class="link">{{ top.count }} {{ top.count === 1 ? 'partida' : 'partidas' }} · ver jogo →</span>
+      </a>
+    } @else {
+      <a class="tile box" routerLink="/jogos">
+        <span class="label">Jogo mais jogado</span>
+        <span class="value">—</span>
+        <span class="link">Ver a coleção →</span>
+      </a>
+    }
+
+    @if (bestWinRate(); as best) {
+      <a class="tile box" routerLink="/partidas" [queryParams]="{ jogador: best.player.id }">
+        <span class="label">Melhor taxa de vitórias</span>
+        <span class="value player">
+          <app-character-icon [avatar]="best.player.avatar" />
+          {{ best.player.name }}
+        </span>
+        <span class="link">{{ best.winRate }}% em {{ best.played }} partidas · ver partidas →</span>
+      </a>
+    } @else {
+      <a class="tile box" routerLink="/partidas/nova">
+        <span class="label">Melhor taxa de vitórias</span>
+        <span class="value">—</span>
+        <span class="link">Conta a partir de {{ minMatchesForRate }} partidas · registar →</span>
+      </a>
+    }
+  </div>
+
+  <div class="columns">
+    <section class="box">
+      <h2>Tabela geral</h2>
+
+      @if (ranking().length) {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="position">#</th>
+                <th>Jogador</th>
+                <th class="number">Vitórias</th>
+                <th class="number">Partidas</th>
+                <th>% vitórias</th>
+                <th>Últimas {{ recentMatches }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of ranking(); track row.player.id; let index = $index) {
+                <tr [class.first]="index === 0">
+                  <td class="position">{{ index + 1 }}</td>
+                  <td>
+                    <span class="player">
+                      <app-character-icon [avatar]="row.player.avatar" />
+                      {{ row.player.name }}
+                    </span>
+                  </td>
+                  <td class="number">{{ row.wins }}</td>
+                  <td class="number">{{ row.played }}</td>
+                  <td>
+                    <div class="rate">
+                      <div class="track">
+                        <div class="fill" [style.width.%]="row.winRate"></div>
+                      </div>
+                      <span>{{ row.winRate }}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="recent">
+                      @for (won of row.recentWins; track $index) {
+                        <i [class.win]="won" [title]="won ? 'Vitória' : 'Derrota'"></i>
+                      } @empty {
+                        <span class="hint">—</span>
+                      }
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="hint">Ainda não há jogadores. Adicione-os na página dos Jogadores.</p>
+      }
+    </section>
+
+    <section class="box">
+      <h2>Senhores de cada jogo</h2>
+
+      <ul class="champions">
+        @for (champion of gameChampions(); track champion.game.id) {
+          <li>
+            <a class="game" [routerLink]="['/jogos', champion.game.id]">{{ champion.game.name }}</a>
+            @if (champion.player; as player) {
+              <span class="champion">
+                <span class="player">
+                  <app-character-icon [avatar]="player.avatar" />
+                  {{ player.name }}
+                </span>
+                <span class="wins">{{ champion.wins }}×</span>
+              </span>
+            } @else if (champion.isTie) {
+              <span class="hint">
+                Empate · {{ champion.wins }} {{ champion.wins === 1 ? 'vitória' : 'vitórias' }} cada
+              </span>
+            } @else {
+              <span class="hint">Sem partidas</span>
+            }
+          </li>
+        } @empty {
+          <li class="hint">Ainda não há jogos na coleção.</li>
+        }
+      </ul>
+    </section>
+  </div>
+}
