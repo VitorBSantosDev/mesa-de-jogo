@@ -1,5 +1,5 @@
 <a routerLink="/jogos" class="back">← Voltar aos jogos</a>
-<h1>Adicionar jogo</h1>
+<h1 class="page-title">Adicionar jogo</h1>
 
 <div class="layout">
   <form class="box form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
@@ -20,7 +20,7 @@
     <label class="field">
       <span>Categoria</span>
       <select formControlName="category">
-        <option value="" disabled>Escolhe a categoria</option>
+        <option value="" disabled>Escolha a categoria</option>
         @for (category of categories; track category) {
           <option [value]="category">{{ category }}</option>
         }

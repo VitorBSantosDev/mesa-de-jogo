@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
@@ -9,13 +8,13 @@ import { MatchService } from '../../services/match.service';
 import { Game } from '../../models/game.model';
 import { Player } from '../../models/player.model';
 import { Match } from '../../models/match.model';
-import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { sortByName } from '../../utils/sort.utils';
-import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.component';
+import { MatchCardComponent } from '../../components/match-card/match-card.component';
+import { findById } from '../../utils/find.utils';
 
 @Component({
   selector: 'app-matches',
-  imports: [RouterLink, FormsModule, DatePipe, CharacterIconComponent, WinnerRingComponent],
+  imports: [FormsModule, MatchCardComponent],
   templateUrl: './matches.component.html',
   styleUrl: './matches.component.css',
 })
@@ -24,7 +23,7 @@ export class MatchesComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private gameService = inject(GameService);
   private playerService = inject(PlayerService);
-  protected matchService = inject(MatchService);
+  private matchService = inject(MatchService);
 
   games = signal<Game[]>([]);
   players = signal<Player[]>([]);
@@ -94,10 +93,6 @@ export class MatchesComponent implements OnInit {
   }
 
   getGameName(id: number): string {
-    return this.games().find((game) => game.id === id)?.name ?? 'Jogo removido';
-  }
-
-  findPlayer(id: number): Player | undefined {
-    return this.players().find((player) => player.id === id);
+    return findById(this.games(), id)?.name ?? 'Jogo removido';
   }
 }

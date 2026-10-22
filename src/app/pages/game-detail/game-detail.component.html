@@ -5,7 +5,7 @@
 } @else if (errorMessage()) {
   <p class="state error">{{ errorMessage() }}</p>
 } @else if (game(); as game) {
-  <h1>{{ game.name }}</h1>
+  <h1 class="page-title">{{ game.name }}</h1>
 
   <dl class="facts">
     <div><dt>Categoria</dt><dd>{{ game.category }}</dd></div>
@@ -41,20 +41,13 @@
   </div>
 
   <h2>Partidas</h2>
-  @for (match of matches(); track match.id) {
-    <article class="match box">
-      <span class="date">{{ match.date | date: 'd MMM y' }}</span>
-      <ol>
-        @for (result of matchService.sortByScore(match); track result.playerId; let first = $first) {
-          <li [class.winner]="first">
-            {{ getPlayerName(result.playerId) }} <span class="score">{{ result.score }}</span>
-          </li>
-        }
-      </ol>
-    </article>
-  } @empty {
-    <p class="state">Ainda não há partidas deste jogo.</p>
-  }
+  <div class="list">
+    @for (match of matches(); track match.id) {
+      <app-match-card [match]="match" [players]="players()" />
+    } @empty {
+      <p class="state">Ainda não há partidas deste jogo.</p>
+    }
+  </div>
 
   <section class="danger-zone">
     <div class="danger-head">

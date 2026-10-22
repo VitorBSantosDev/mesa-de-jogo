@@ -1,0 +1,30 @@
+<article class="match box">
+  <div class="date">
+    <span class="day">{{ match().date | date: 'd' }}</span>
+    <span class="month">{{ match().date | date: 'MMM y' }}</span>
+  </div>
+
+  <div>
+    @if (gameName(); as name) {
+      <a class="game" [routerLink]="['/jogos', match().gameId]">{{ name }}</a>
+    }
+
+    <ol class="results">
+      @for (result of sortedResults(); track result.playerId; let first = $first, index = $index) {
+        @let player = findPlayer(result.playerId);
+        <li [class.winner]="first">
+          @if (first) {
+            <app-winner-ring />
+          } @else {
+            <span class="position">{{ index + 1 }}.º</span>
+          }
+          @if (player) {
+            <app-character-icon [avatar]="player.avatar" />
+          }
+          <span class="name">{{ player?.name ?? 'Jogador removido' }}</span>
+          <span class="score">{{ result.score }}</span>
+        </li>
+      }
+    </ol>
+  </div>
+</article>

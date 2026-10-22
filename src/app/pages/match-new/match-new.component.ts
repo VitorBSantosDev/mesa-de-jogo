@@ -21,6 +21,7 @@ import { CharacterIconComponent } from '../../components/character-icon/characte
 import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.component';
 import { getTodayIso } from '../../utils/date.utils';
 import { sortByName } from '../../utils/sort.utils';
+import { findById } from '../../utils/find.utils';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -160,7 +161,7 @@ export class MatchNewComponent implements OnInit {
   }
 
   findPlayer(id: number): Player | undefined {
-    return this.players().find((player) => player.id === id);
+    return findById(this.players(), id);
   }
 
   getSelectedGame(): Game | undefined {

@@ -9,10 +9,12 @@ import { Game } from '../../models/game.model';
 import { Match, MatchResult } from '../../models/match.model';
 import { Player } from '../../models/player.model';
 import { PlayerWins } from '../../models/player-stats.model';
+import { findById } from '../../utils/find.utils';
+import { MatchCardComponent } from '../../components/match-card/match-card.component';
 
 @Component({
   selector: 'app-game-detail',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, MatchCardComponent],
   templateUrl: './game-detail.component.html',
   styleUrl: './game-detail.component.css',
 })
@@ -21,7 +23,7 @@ export class GameDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private gameService = inject(GameService);
-  protected matchService = inject(MatchService);
+  private matchService = inject(MatchService);
   private playerService = inject(PlayerService);
 
   game = signal<Game | undefined>(undefined);
@@ -57,7 +59,7 @@ export class GameDetailComponent implements OnInit {
   }
 
   getPlayerName(id: number): string {
-    return this.players().find((player) => player.id === id)?.name ?? 'Jogador removido';
+    return findById(this.players(), id)?.name ?? 'Jogador removido';
   }
 
   winsByPlayer = computed<PlayerWins[]>(() =>
