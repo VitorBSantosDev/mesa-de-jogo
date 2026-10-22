@@ -59,7 +59,7 @@
             <thead>
               <tr>
                 <th class="position">#</th>
-                <th>Jogador</th>
+                <th class="player-column">Jogador</th>
                 <th class="number">Vitórias</th>
                 <th class="number">Partidas</th>
                 <th>% vitórias</th>
@@ -70,7 +70,7 @@
               @for (row of ranking(); track row.player.id; let index = $index) {
                 <tr [class.first]="index === 0">
                   <td class="position">{{ index + 1 }}</td>
-                  <td>
+                  <td class="player-column">
                     <span class="player">
                       <app-character-icon [avatar]="row.player.avatar" />
                       {{ row.player.name }}

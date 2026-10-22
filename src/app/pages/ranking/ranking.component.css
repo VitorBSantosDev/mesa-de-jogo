@@ -60,7 +60,7 @@ th {
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--muted);
-  text-align: left;
+  text-align: center;
   padding: 8px 10px;
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
@@ -69,6 +69,7 @@ th {
 td {
   padding: 10px;
   border-bottom: 1px solid var(--line);
+  text-align: center;
 }
 
 tbody tr:last-child td {
@@ -83,7 +84,11 @@ tbody tr:last-child td {
 }
 
 .number {
-  text-align: right;
+  text-align: center;
+}
+
+.player-column {
+  text-align: left;
 }
 
 .player {
