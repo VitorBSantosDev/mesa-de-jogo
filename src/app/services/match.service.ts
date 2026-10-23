@@ -21,6 +21,14 @@ function mapToMatch(row: MatchRow): Match {
   };
 }
 
+function mapToResultRows(matchId: number, results: MatchResult[]) {
+  return results.map((result) => ({
+    match_id: matchId,
+    player_id: result.playerId,
+    score: result.score,
+  }));
+}
+
 @Service()
 export class MatchService {
   private supabase = inject(SupabaseService);
@@ -35,6 +43,11 @@ export class MatchService {
     return this.supabase.execute(request).pipe(map((rows) => rows.map(mapToMatch)));
   }
 
+  getById(id: number): Observable<Match> {
+    const request = this.supabase.client.from('matches').select(MATCH_COLUMNS).eq('id', id).single();
+    return this.supabase.execute(request).pipe(map(mapToMatch));
+  }
+
   create(match: NewMatch): Observable<Match> {
     const insertMatch = this.supabase.client
       .from('matches')
@@ -44,15 +57,30 @@ export class MatchService {
 
     return this.supabase.execute(insertMatch).pipe(
       switchMap(({ id }) => {
-        const results = match.results.map((result) => ({
-          match_id: id,
-          player_id: result.playerId,
-          score: result.score,
-        }));
-        const insertResults = this.supabase.client.from('match_results').insert(results);
+        const insertResults = this.supabase.client.from('match_results').insert(mapToResultRows(id, match.results));
         return this.supabase.execute(insertResults).pipe(map(() => ({ ...match, id })));
       }),
     );
+  }
+
+  update(id: number, match: NewMatch): Observable<Match> {
+    const updateMatch = this.supabase.client
+      .from('matches')
+      .update({ game_id: match.gameId, date: match.date })
+      .eq('id', id);
+    const deleteResults = this.supabase.client.from('match_results').delete().eq('match_id', id);
+    const insertResults = this.supabase.client.from('match_results').insert(mapToResultRows(id, match.results));
+
+    return this.supabase.execute(updateMatch).pipe(
+      switchMap(() => this.supabase.execute(deleteResults)),
+      switchMap(() => this.supabase.execute(insertResults)),
+      map(() => ({ ...match, id })),
+    );
+  }
+
+  delete(id: number): Observable<void> {
+    const request = this.supabase.client.from('matches').delete().eq('id', id);
+    return this.supabase.execute(request).pipe(map(() => undefined));
   }
 
   getWinnerId(match: Match): number {

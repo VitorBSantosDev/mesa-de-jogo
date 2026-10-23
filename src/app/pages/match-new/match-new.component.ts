@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -10,13 +10,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { forkJoin, map } from 'rxjs';
+import { forkJoin, map, of } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
 import { MatchService } from '../../services/match.service';
 import { Game } from '../../models/game.model';
 import { Player } from '../../models/player.model';
-import { NewMatch } from '../../models/match.model';
+import { Match, NewMatch } from '../../models/match.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.component';
 import { getTodayIso } from '../../utils/date.utils';
@@ -41,6 +41,7 @@ export class MatchNewComponent implements OnInit {
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   today = getTodayIso();
 
@@ -50,9 +51,15 @@ export class MatchNewComponent implements OnInit {
   isLoading = signal(true);
   errorMessage = signal('');
 
+  editingId = signal<number | null>(null);
+
   isSaving = signal(false);
   saveError = signal('');
   submitted = signal(false);
+
+  isConfirmingDelete = signal(false);
+  isDeleting = signal(false);
+  deleteError = signal('');
 
   sortedGames = computed(() => sortByName(this.games()));
 
@@ -115,6 +122,9 @@ export class MatchNewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) this.editingId.set(id);
+
     this.loadData();
   }
 
@@ -122,21 +132,36 @@ export class MatchNewComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
+    const editingId = this.editingId();
+
     forkJoin({
       games: this.gameService.getAll(),
       players: this.playerService.getAll(),
+      match: editingId === null ? of(null) : this.matchService.getById(editingId),
     }).subscribe({
-      next: ({ games, players }) => {
+      next: ({ games, players, match }) => {
         this.games.set(games);
         this.players.set(players);
+        if (match) this.fillForm(match);
         this.form.updateValueAndValidity();
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Não foi possível carregar os jogos e jogadores. Confirme que a API está a correr.');
+        this.errorMessage.set('Não foi possível carregar os dados. Verifique a ligação e tente novamente.');
         this.isLoading.set(false);
       },
     });
+  }
+
+  private fillForm(match: Match): void {
+    this.form.patchValue({ gameId: match.gameId, date: match.date });
+    this.results.clear();
+
+    for (const result of match.results) {
+      const resultForm = this.createResult(result.playerId);
+      resultForm.controls.score.setValue(result.score);
+      this.results.push(resultForm);
+    }
   }
 
   createResult(playerId: number): ResultForm {
@@ -201,14 +226,42 @@ export class MatchNewComponent implements OnInit {
       })),
     };
 
+    const editingId = this.editingId();
+    const request = editingId === null ? this.matchService.create(newMatch) : this.matchService.update(editingId, newMatch);
+
     this.isSaving.set(true);
     this.saveError.set('');
 
-    this.matchService.create(newMatch).subscribe({
+    request.subscribe({
       next: () => this.router.navigate(['/partidas']),
       error: () => {
-        this.saveError.set('Não foi possível guardar a partida. Confirme que a API está a correr.');
+        this.saveError.set('Não foi possível guardar a partida. Verifique a ligação e tente novamente.');
         this.isSaving.set(false);
+      },
+    });
+  }
+
+  askDelete(): void {
+    this.isConfirmingDelete.set(true);
+    this.deleteError.set('');
+  }
+
+  cancelDelete(): void {
+    this.isConfirmingDelete.set(false);
+  }
+
+  deleteMatch(): void {
+    const editingId = this.editingId();
+    if (editingId === null) return;
+
+    this.isDeleting.set(true);
+    this.deleteError.set('');
+
+    this.matchService.delete(editingId).subscribe({
+      next: () => this.router.navigate(['/partidas']),
+      error: () => {
+        this.deleteError.set('Não foi possível eliminar a partida. Verifique a ligação e tente novamente.');
+        this.isDeleting.set(false);
       },
     });
   }

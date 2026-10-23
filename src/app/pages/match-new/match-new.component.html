@@ -1,5 +1,5 @@
 <a routerLink="/partidas" class="back">← Voltar às partidas</a>
-<h1 class="page-title">Registar partida</h1>
+<h1 class="page-title">{{ editingId() === null ? 'Registar partida' : 'Editar partida' }}</h1>
 
 @if (isLoading()) {
   <p class="state">A carregar…</p>
@@ -95,7 +95,11 @@
 
       <div class="actions">
         <button type="submit" class="btn primary" [disabled]="isSaving()">
-          {{ isSaving() ? 'A guardar…' : 'Guardar partida' }}
+          @if (editingId() === null) {
+            {{ isSaving() ? 'A guardar…' : 'Guardar partida' }}
+          } @else {
+            {{ isSaving() ? 'A guardar…' : 'Guardar alterações' }}
+          }
         </button>
         <a routerLink="/partidas" class="btn">Cancelar</a>
       </div>
@@ -137,4 +141,36 @@
       }
     </aside>
   </div>
+  @if (editingId() !== null) {
+    <section class="danger-zone">
+      <div class="danger-head">
+        <div>
+          <h2>Eliminar partida</h2>
+          <p class="hint">Apaga esta partida e os resultados dela. A classificação vai ser recalculada.</p>
+        </div>
+        @if (!isConfirmingDelete()) {
+          <button type="button" class="btn danger" (click)="askDelete()">Eliminar partida</button>
+        }
+      </div>
+
+      @if (isConfirmingDelete()) {
+        <div class="confirm">
+          <p>Tem a certeza? Esta ação não pode ser desfeita.</p>
+
+          @if (deleteError()) {
+            <p class="error">{{ deleteError() }}</p>
+          }
+
+          <div class="actions">
+            <button type="button" class="btn danger-solid" [disabled]="isDeleting()" (click)="deleteMatch()">
+              {{ isDeleting() ? 'A eliminar…' : 'Confirmar eliminação' }}
+            </button>
+            <button type="button" class="btn" [disabled]="isDeleting()" (click)="cancelDelete()">
+              Manter partida
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  }
 }

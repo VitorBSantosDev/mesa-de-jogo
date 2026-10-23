@@ -16,5 +16,6 @@ export const routes: Routes = [
   { path: 'jogadores', component: PlayersComponent, title: 'Jogadores · Mesa de Jogo' },
   { path: 'partidas', component: MatchesComponent, title: 'Partidas · Mesa de Jogo' },
   { path: 'partidas/nova', component: MatchNewComponent, title: 'Nova partida · Mesa de Jogo' },
+  { path: 'partidas/:id/editar', component: MatchNewComponent, title: 'Editar partida · Mesa de Jogo' },
   { path: '**', redirectTo: '' },
 ];

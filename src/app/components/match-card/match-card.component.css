@@ -4,7 +4,7 @@
 
 .match {
   display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-columns: 96px minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
 }
@@ -91,5 +91,9 @@
 @media (max-width: 600px) {
   .match {
     grid-template-columns: 1fr;
+  }
+
+  .edit {
+    justify-self: start;
   }
 }
