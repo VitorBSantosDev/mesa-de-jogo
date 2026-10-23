@@ -1,108 +1,127 @@
-<a routerLink="/jogos" class="back">← Voltar aos jogos</a>
-<h1 class="page-title">Adicionar jogo</h1>
+@if (editingId(); as id) {
+  <a [routerLink]="['/jogos', id]" class="back">← Voltar ao jogo</a>
+  <h1 class="page-title">Editar jogo</h1>
+} @else {
+  <a routerLink="/jogos" class="back">← Voltar aos jogos</a>
+  <h1 class="page-title">Adicionar jogo</h1>
+}
 
-<div class="layout">
-  <form class="box form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <label class="field">
-      <span>Nome</span>
-      <input type="text" formControlName="name" placeholder="Ex.: Wingspan" autocomplete="off" />
-      @if (showError('name', 'required')) {
-        <small class="error">O nome é obrigatório.</small>
-      } @else if (showError('name', 'minlength')) {
-        <small class="error">Escreva pelo menos 2 caracteres.</small>
-      } @else if (showError('name', 'maxlength')) {
-        <small class="error">Use no máximo 40 caracteres.</small>
-      } @else if (showError('name', 'duplicate')) {
-        <small class="error">Já existe um jogo com este nome.</small>
-      }
-    </label>
-
-    <label class="field">
-      <span>Categoria</span>
-      <select formControlName="category">
-        <option value="" disabled>Escolha a categoria</option>
-        @for (category of categories; track category) {
-          <option [value]="category">{{ category }}</option>
-        }
-      </select>
-      @if (showError('category', 'required')) {
-        <small class="error">Escolha a categoria.</small>
-      }
-    </label>
-
-    <div class="columns">
+@if (isLoading()) {
+  <p class="state">A carregar…</p>
+} @else if (loadError()) {
+  <p class="state error">{{ loadError() }}</p>
+} @else {
+  <div class="layout">
+    <form class="box form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <label class="field">
-        <span>Mínimo de jogadores</span>
-        <input type="number" formControlName="minPlayers" min="1" max="12" />
-        @if (showError('minPlayers', 'required')) {
-          <small class="error">Indique o mínimo.</small>
-        } @else if (showError('minPlayers', 'min') || showError('minPlayers', 'max')) {
-          <small class="error">Tem de ser entre 1 e 12.</small>
+        <span>Nome</span>
+        <input type="text" formControlName="name" placeholder="Ex.: Wingspan" autocomplete="off" />
+        @if (showError('name', 'required')) {
+          <small class="error">O nome é obrigatório.</small>
+        } @else if (showError('name', 'minlength')) {
+          <small class="error">Escreva pelo menos 2 caracteres.</small>
+        } @else if (showError('name', 'maxlength')) {
+          <small class="error">Use no máximo 40 caracteres.</small>
+        } @else if (showError('name', 'duplicate')) {
+          <small class="error">Já existe um jogo com este nome.</small>
         }
       </label>
 
       <label class="field">
-        <span>Máximo de jogadores</span>
-        <input type="number" formControlName="maxPlayers" min="1" max="12" />
-        @if (showError('maxPlayers', 'required')) {
-          <small class="error">Indique o máximo.</small>
-        } @else if (showError('maxPlayers', 'min') || showError('maxPlayers', 'max')) {
-          <small class="error">Tem de ser entre 1 e 12.</small>
-        } @else if (form.hasError('playersRange') && form.controls.maxPlayers.touched) {
-          <small class="error">Não pode ser menor que o mínimo.</small>
+        <span>Categoria</span>
+        <select formControlName="category">
+          <option value="" disabled>Escolha a categoria</option>
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+        @if (showError('category', 'required')) {
+          <small class="error">Escolha a categoria.</small>
         }
       </label>
-    </div>
 
-    <label class="field">
-      <span>Duração média (minutos)</span>
-      <input type="number" formControlName="duration" min="5" max="600" />
-      @if (showError('duration', 'required')) {
-        <small class="error">Indique a duração.</small>
-      } @else if (showError('duration', 'min') || showError('duration', 'max')) {
-        <small class="error">Tem de ser entre 5 e 600 minutos.</small>
-      }
-    </label>
-
-    <div class="field">
-      <span>Imagem (opcional)</span>
-
-      <div class="image-actions">
-        <label class="btn file-btn">
-          {{ form.controls.image.value ? 'Mudar imagem' : 'Escolher imagem' }}
-          <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+      <div class="columns">
+        <label class="field">
+          <span>Mínimo de jogadores</span>
+          <input type="number" formControlName="minPlayers" min="1" max="12" />
+          @if (showError('minPlayers', 'required')) {
+            <small class="error">Indique o mínimo.</small>
+          } @else if (showError('minPlayers', 'min') || showError('minPlayers', 'max')) {
+            <small class="error">Tem de ser entre 1 e 12.</small>
+          }
         </label>
 
-        @if (form.controls.image.value) {
-          <button type="button" class="btn" (click)="removeImage()">Remover imagem</button>
-        }
+        <label class="field">
+          <span>Máximo de jogadores</span>
+          <input type="number" formControlName="maxPlayers" min="1" max="12" />
+          @if (showError('maxPlayers', 'required')) {
+            <small class="error">Indique o máximo.</small>
+          } @else if (showError('maxPlayers', 'min') || showError('maxPlayers', 'max')) {
+            <small class="error">Tem de ser entre 1 e 12.</small>
+          } @else if (form.hasError('playersRange') && form.controls.maxPlayers.touched) {
+            <small class="error">Não pode ser menor que o mínimo.</small>
+          }
+        </label>
+      </div>
 
-        @if (isReadingImage()) {
-          <small class="hint">A ler a imagem…</small>
+      <label class="field">
+        <span>Duração média (minutos)</span>
+        <input type="number" formControlName="duration" min="5" max="600" />
+        @if (showError('duration', 'required')) {
+          <small class="error">Indique a duração.</small>
+        } @else if (showError('duration', 'min') || showError('duration', 'max')) {
+          <small class="error">Tem de ser entre 5 e 600 minutos.</small>
+        }
+      </label>
+
+      <div class="field">
+        <span>Imagem (opcional)</span>
+
+        <div class="image-actions">
+          <label class="btn file-btn">
+            {{ form.controls.image.value ? 'Mudar imagem' : 'Escolher imagem' }}
+            <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+          </label>
+
+          @if (form.controls.image.value) {
+            <button type="button" class="btn" (click)="removeImage()">Remover imagem</button>
+          }
+
+          @if (isReadingImage()) {
+            <small class="hint">A ler a imagem…</small>
+          }
+        </div>
+
+        @if (imageError()) {
+          <small class="error">{{ imageError() }}</small>
+        } @else {
+          <small class="hint">JPG, PNG ou WebP, até {{ maxImageMb }} MB. Aparece no topo do cartão.</small>
         }
       </div>
 
-      @if (imageError()) {
-        <small class="error">{{ imageError() }}</small>
-      } @else {
-        <small class="hint">JPG, PNG ou WebP, até {{ maxImageMb }} MB. Aparece no topo do cartão.</small>
+      @if (saveError()) {
+        <p class="error">{{ saveError() }}</p>
       }
-    </div>
 
-    @if (saveError()) {
-      <p class="error">{{ saveError() }}</p>
-    }
+      <div class="actions">
+        <button type="submit" class="btn primary" [disabled]="isSaving() || isReadingImage()">
+          @if (editingId() === null) {
+            {{ isSaving() ? 'A guardar…' : 'Adicionar à coleção' }}
+          } @else {
+            {{ isSaving() ? 'A guardar…' : 'Guardar alterações' }}
+          }
+        </button>
+        @if (editingId(); as id) {
+          <a [routerLink]="['/jogos', id]" class="btn">Cancelar</a>
+        } @else {
+          <a routerLink="/jogos" class="btn">Cancelar</a>
+        }
+      </div>
+    </form>
 
-    <div class="actions">
-      <button type="submit" class="btn primary" [disabled]="isSaving() || isReadingImage()">
-        {{ isSaving() ? 'A guardar…' : 'Adicionar à coleção' }}
-      </button>
-      <a routerLink="/jogos" class="btn">Cancelar</a>
-    </div>
-  </form>
-
-  <aside class="preview">
-    <span class="label">Pré-visualização</span>
-    <app-game-card [game]="preview" />
-  </aside>
-</div>
+    <aside class="preview">
+      <span class="label">Pré-visualização</span>
+      <app-game-card [game]="preview" />
+    </aside>
+  </div>
+}

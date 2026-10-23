@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: '', component: RankingComponent, title: 'Classificação · Mesa de Jogo' },
   { path: 'jogos', component: GamesComponent, title: 'Jogos · Mesa de Jogo' },
   { path: 'jogos/novo', component: GameNewComponent, title: 'Adicionar jogo · Mesa de Jogo' },
+  { path: 'jogos/:id/editar', component: GameNewComponent, title: 'Editar jogo · Mesa de Jogo' },
   { path: 'jogos/:id', component: GameDetailComponent, title: 'Jogo · Mesa de Jogo' },
   { path: 'jogadores', component: PlayersComponent, title: 'Jogadores · Mesa de Jogo' },
   { path: 'partidas', component: MatchesComponent, title: 'Partidas · Mesa de Jogo' },

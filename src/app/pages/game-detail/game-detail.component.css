@@ -91,6 +91,14 @@ h2 {
   margin: 0 0 12px;
 }
 
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media (max-width: 700px) {
   .facts {
     grid-template-columns: repeat(2, 1fr);
