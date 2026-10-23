@@ -22,6 +22,7 @@ import { WinnerRingComponent } from '../../components/winner-ring/winner-ring.co
 import { getTodayIso } from '../../utils/date.utils';
 import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
+import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -30,7 +31,7 @@ type ResultForm = FormGroup<{
 
 @Component({
   selector: 'app-match-new',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe, CharacterIconComponent, WinnerRingComponent],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, CharacterIconComponent, WinnerRingComponent, DigitsOnlyDirective],
   templateUrl: './match-new.component.html',
   styleUrl: './match-new.component.css',
 })

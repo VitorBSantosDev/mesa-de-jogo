@@ -43,7 +43,7 @@
       <div class="columns">
         <label class="field">
           <span>Mínimo de jogadores</span>
-          <input type="number" formControlName="minPlayers" min="1" max="12" />
+          <input type="number" formControlName="minPlayers" min="1" max="12" appDigitsOnly />
           @if (showError('minPlayers', 'required')) {
             <small class="error">Indique o mínimo.</small>
           } @else if (showError('minPlayers', 'min') || showError('minPlayers', 'max')) {
@@ -53,7 +53,7 @@
 
         <label class="field">
           <span>Máximo de jogadores</span>
-          <input type="number" formControlName="maxPlayers" min="1" max="12" />
+          <input type="number" formControlName="maxPlayers" min="1" max="12" appDigitsOnly />
           @if (showError('maxPlayers', 'required')) {
             <small class="error">Indique o máximo.</small>
           } @else if (showError('maxPlayers', 'min') || showError('maxPlayers', 'max')) {
@@ -66,7 +66,7 @@
 
       <label class="field">
         <span>Duração média (minutos)</span>
-        <input type="number" formControlName="duration" min="5" max="600" />
+        <input type="number" formControlName="duration" min="5" max="600" appDigitsOnly />
         @if (showError('duration', 'required')) {
           <small class="error">Indique a duração.</small>
         } @else if (showError('duration', 'min') || showError('duration', 'max')) {

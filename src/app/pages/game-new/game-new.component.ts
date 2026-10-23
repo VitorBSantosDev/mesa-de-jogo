@@ -11,6 +11,7 @@ import { Game, GameCategory, GAME_CATEGORIES, NewGame } from '../../models/game.
 import { GameCardComponent } from '../../components/game-card/game-card.component';
 import { resizeImage } from '../../utils/image.utils';
 import { findById } from '../../utils/find.utils';
+import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 
 const BYTES_PER_MB = 1024 * 1024;
 const MAX_IMAGE_MB = 5;
@@ -18,7 +19,7 @@ const MAX_IMAGE_BYTES = MAX_IMAGE_MB * BYTES_PER_MB;
 
 @Component({
   selector: 'app-game-new',
-  imports: [ReactiveFormsModule, RouterLink, GameCardComponent],
+  imports: [ReactiveFormsModule, RouterLink, GameCardComponent, DigitsOnlyDirective],
   templateUrl: './game-new.component.html',
   styleUrl: './game-new.component.css',
 })

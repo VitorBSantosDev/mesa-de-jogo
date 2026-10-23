@@ -72,7 +72,7 @@
                 }
                 {{ player?.name }}
               </span>
-              <input type="number" formControlName="score" min="0" step="1" inputmode="numeric" placeholder="Pontos" />
+              <input type="number" formControlName="score" min="0" step="1" inputmode="numeric" placeholder="Pontos" appDigitsOnly />
             </label>
           } @empty {
             <p class="hint">Escolha primeiro quem jogou.</p>
