@@ -24,6 +24,7 @@ Aplicação web para gerir as sessões de jogos de tabuleiro de um grupo de amig
 
 - Até 12 jogadores, cada um com uma personagem diferente
 - Adicionar e editar; remover só é possível se o jogador não tiver partidas
+- Cena de batalha animada em pixel art: os heróis de um lado e, se alguém escolher o Sauron, o exército dele do outro (orcs, Nazgûl, Balrog)
 
 **Partidas**
 
@@ -138,7 +139,7 @@ supabase/         schema.sql e seed.sql
 
 | Conceito                                          | Onde                                                                                                                                                                                                               |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Componentes, `input()` e `output()`           | `GameCardComponent`, `MatchCardComponent`, `CharacterIconComponent`, `FilterPanelComponent`                                                                                                                                  |
+| Componentes, `input()` e `output()` | `GameCardComponent`, `MatchCardComponent`, `CharacterIconComponent`, `FilterPanelComponent`, `BattleSceneComponent` |
 | Services e injeção de dependências             | `GameService`, `PlayerService`, `MatchService`, `AuthService`, `SupabaseService`                                                                                                                         |
 | Interfaces                                        | `src/app/models` e os tipos `*Row` dos services                                                                                                                                                                |
 | Observables e `subscribe`                       | Todos os pedidos aos services, com estados de carregamento e erro                                                                                                                                                  |
@@ -148,6 +149,7 @@ supabase/         schema.sql e seed.sql
 | Router                                            | 11 rotas, `RouterLink`, parâmetros (`jogos/:id`), query params (`?jogador=`) e `authGuard`                                                                                                                |
 | Reactive Forms                                    | Jogos, jogadores, partidas (`FormArray`), login e criar conta                                                                                                                                                    |
 | Validators                                        | `required`, `email`, `minLength`, `maxLength`, `min`, `max`, `pattern` e validators próprios (data não futura, número de jogadores, sem empate no 1.º lugar, nome único, palavras-passe iguais) |
-| `OnInit`, `AfterViewInit` e `OnDestroy` | Carregamento de dados nas páginas; `FilterPanelComponent` cria um `IntersectionObserver` no `ngAfterViewInit` e desliga-o no `ngOnDestroy` |
+| `OnInit`, `AfterViewInit` e `OnDestroy` | Carregamento de dados nas páginas; `FilterPanelComponent` liga um `IntersectionObserver` e `BattleSceneComponent` liga a animação no `ngAfterViewInit`, e ambos os desligam no `ngOnDestroy` |
 | Projeção de conteúdo (`<ng-content />`) | `FilterPanelComponent` recebe os filtros de Jogos e Partidas |
+| `viewChild()` e `afterRenderEffect()` | `BattleSceneComponent` acede ao `<canvas>` e volta a desenhar a cena quando a lista de jogadores muda |
 | Signals                                           | Estado das páginas (`signal`, `computed`)                                                                                                                                                                     |
