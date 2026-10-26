@@ -53,7 +53,7 @@ export class GamesComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Não foi possível carregar os jogos. Confirme que a API está a correr.');
+        this.errorMessage.set('Não foi possível carregar os jogos. Verifique a ligação e tente novamente.');
         this.isLoading.set(false);
       },
     });

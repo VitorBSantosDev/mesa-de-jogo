@@ -81,7 +81,7 @@ export class MatchesComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Não foi possível carregar as partidas. Confirme que a API está a correr.');
+        this.errorMessage.set('Não foi possível carregar as partidas. Verifique a ligação e tente novamente.');
         this.isLoading.set(false);
       },
     });

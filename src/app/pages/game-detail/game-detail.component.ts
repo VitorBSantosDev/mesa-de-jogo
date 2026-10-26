@@ -105,7 +105,7 @@ export class GameDetailComponent implements OnInit {
     this.gameService.delete(game.id).subscribe({
       next: () => this.router.navigate(['/jogos']),
       error: () => {
-        this.deleteError.set('Não foi possível remover o jogo. Confirme que a API está a correr.');
+        this.deleteError.set('Não foi possível remover o jogo. Verifique a ligação e tente novamente.');
         this.isDeleting.set(false);
       },
     });

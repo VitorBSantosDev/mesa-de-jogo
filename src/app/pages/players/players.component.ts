@@ -93,7 +93,7 @@ export class PlayersComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Não foi possível carregar os jogadores. Confirme que a API está a correr.');
+        this.errorMessage.set('Não foi possível carregar os jogadores. Verifique a ligação e tente novamente.');
         this.isLoading.set(false);
       },
     });
@@ -178,7 +178,7 @@ export class PlayersComponent implements OnInit {
         this.isDeleting.set(false);
       },
       error: () => {
-        this.deleteError.set('Não foi possível remover o jogador. Confirme que a API está a correr.');
+        this.deleteError.set('Não foi possível remover o jogador. Verifique a ligação e tente novamente.');
         this.isDeleting.set(false);
       },
     });
