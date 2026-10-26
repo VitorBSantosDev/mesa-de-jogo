@@ -1,0 +1,64 @@
+<div class="register">
+  <h1 class="page-title">Criar conta</h1>
+
+  @if (authService.isLoggedIn()) {
+    <div class="box form">
+      <p>Já tem sessão iniciada como <strong>{{ authService.userEmail() }}</strong>.</p>
+      <a routerLink="/" class="btn primary">Ir para a classificação</a>
+    </div>
+  } @else if (sentTo()) {
+    <div class="box form">
+      <h2>Confirme o seu email</h2>
+      <p>
+        Enviámos uma ligação para <strong>{{ sentTo() }}</strong>.
+        Abra o email e clique em "Confirmar conta" para a ativar.
+      </p>
+      <p class="hint">Se não o encontrar, veja na pasta de spam.</p>
+      <a routerLink="/login" class="btn">Ir para o login</a>
+    </div>
+  } @else {
+    <form class="box form" [formGroup]="form" (ngSubmit)="signUp()" novalidate>
+      <p class="hint">Com uma conta pode adicionar, editar e remover jogos, jogadores e partidas.</p>
+
+      <label class="field">
+        <span>Email</span>
+        <input type="email" formControlName="email" placeholder="nome@exemplo.pt" autocomplete="email" />
+        @if (showError('email', 'required')) {
+          <small class="error">O email é obrigatório.</small>
+        } @else if (showError('email', 'email')) {
+          <small class="error">Escreva um email válido.</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Palavra-passe</span>
+        <input type="password" formControlName="password" autocomplete="new-password" />
+        @if (showError('password', 'required')) {
+          <small class="error">A palavra-passe é obrigatória.</small>
+        } @else if (showError('password', 'minlength')) {
+          <small class="error">Use pelo menos 6 caracteres.</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Confirmar palavra-passe</span>
+        <input type="password" formControlName="confirmPassword" autocomplete="new-password" />
+        @if (showError('confirmPassword', 'required')) {
+          <small class="error">Repita a palavra-passe.</small>
+        } @else if (showPasswordMismatch()) {
+          <small class="error">As palavras-passe não coincidem.</small>
+        }
+      </label>
+
+      @if (signUpError()) {
+        <p class="error">{{ signUpError() }}</p>
+      }
+
+      <button type="submit" class="btn primary" [disabled]="isSigningUp() || form.invalid">
+        {{ isSigningUp() ? 'A criar conta…' : 'Criar conta' }}
+      </button>
+
+      <p class="hint">Já tem conta? <a routerLink="/login">Entrar</a></p>
+    </form>
+  }
+</div>

@@ -8,6 +8,7 @@ import { MatchesComponent } from './pages/matches/matches.component';
 import { MatchNewComponent } from './pages/match-new/match-new.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
   { path: '', component: RankingComponent, title: 'Classificação · Mesa de Jogo' },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'partidas/nova', component: MatchNewComponent, canActivate: [authGuard], title: 'Nova partida · Mesa de Jogo' },
   { path: 'partidas/:id/editar', component: MatchNewComponent, canActivate: [authGuard], title: 'Editar partida · Mesa de Jogo' },
   { path: 'login', component: LoginComponent, title: 'Entrar · Mesa de Jogo' },
+  { path: 'criar-conta', component: RegisterComponent, title: 'Criar conta · Mesa de Jogo' },
   { path: '**', redirectTo: '' },
 ];

@@ -37,6 +37,8 @@
       <button type="submit" class="btn primary" [disabled]="isSigningIn() || form.invalid">
         {{ isSigningIn() ? 'A entrar…' : 'Entrar' }}
       </button>
+
+      <p class="hint">Ainda não tem conta? <a routerLink="/criar-conta">Criar conta</a></p>
     </form>
   }
 </div>

@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthError } from '@supabase/supabase-js';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -45,8 +46,12 @@ export class LoginComponent {
         const returnUrl = this.route.snapshot.queryParamMap.get('voltar') ?? '/';
         this.router.navigateByUrl(returnUrl);
       },
-      error: () => {
-        this.signInError.set('Não foi possível entrar. Confirme que o email e a palavra-passe estão corretos.');
+      error: (error: AuthError) => {
+        this.signInError.set(
+          error.code === 'email_not_confirmed'
+            ? 'Ainda não confirmou o email. Abra a ligação que lhe enviámos e tente novamente.'
+            : 'Não foi possível entrar. Confirme o email e a palavra-passe.',
+        );
         this.isSigningIn.set(false);
       },
     });

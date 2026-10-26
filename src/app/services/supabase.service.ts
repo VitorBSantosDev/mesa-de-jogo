@@ -11,7 +11,9 @@ interface SupabaseResponse<T> {
 
 @Service()
 export class SupabaseService {
-  readonly client = createClient<Database>(environment.supabaseUrl, environment.supabaseKey);
+  readonly client = createClient<Database>(environment.supabaseUrl, environment.supabaseKey, {
+    auth: { flowType: 'pkce' },
+  });
 
   execute<T>(request: PromiseLike<SupabaseResponse<T>>): Observable<T> {
     return from(request).pipe(
