@@ -90,10 +90,22 @@
 
 @media (max-width: 600px) {
   .match {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'date edit'
+      'details details';
+  }
+
+  .date {
+    grid-area: date;
+  }
+
+  .details {
+    grid-area: details;
   }
 
   .edit {
-    justify-self: start;
+    grid-area: edit;
+    align-self: start;
   }
 }

@@ -4,7 +4,7 @@
     <span class="month">{{ match().date | date: 'MMM y' }}</span>
   </div>
 
-  <div>
+  <div class="details">
     @if (gameName(); as name) {
       <a class="game" [routerLink]="['/jogos', match().gameId]">{{ name }}</a>
     }
