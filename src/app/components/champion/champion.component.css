@@ -1,0 +1,38 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.ring {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 41%;
+  transform: translate(-50%, -18%);
+  animation: ring-float 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes ring-float {
+  from {
+    transform: translate(-50%, -18%);
+    filter: drop-shadow(0 0 2px rgb(255 215 94 / .55));
+  }
+
+  to {
+    transform: translate(-50%, -42%);
+    filter: drop-shadow(0 0 9px rgb(255 215 94 / 1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+  }
+}

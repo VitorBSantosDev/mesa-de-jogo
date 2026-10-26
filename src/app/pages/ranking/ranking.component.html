@@ -32,7 +32,8 @@
     }
 
     @if (bestWinRate(); as best) {
-      <a class="tile box" routerLink="/partidas" [queryParams]="{ jogador: best.player.id }">
+      <a class="tile box best" routerLink="/partidas" [queryParams]="{ jogador: best.player.id }">
+        <app-champion [avatar]="best.player.avatar" aria-hidden="true" />
         <span class="label">Melhor taxa de vitórias</span>
         <span class="value player">
           <app-character-icon [avatar]="best.player.avatar" />

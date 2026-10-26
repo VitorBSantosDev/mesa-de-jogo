@@ -9,6 +9,7 @@ import { Player } from '../../models/player.model';
 import { Match } from '../../models/match.model';
 import { PlayerStanding } from '../../models/player-stats.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
+import { ChampionComponent } from '../../components/champion/champion.component';
 import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
 
@@ -28,7 +29,7 @@ interface GameChampion {
 
 @Component({
   selector: 'app-ranking',
-  imports: [RouterLink, CharacterIconComponent],
+  imports: [RouterLink, CharacterIconComponent, ChampionComponent],
   templateUrl: './ranking.component.html',
   styleUrl: './ranking.component.css',
 })

@@ -36,6 +36,19 @@
   font-size: .85rem;
 }
 
+.tile.best {
+  position: relative;
+  padding-right: 104px;
+}
+
+.tile.best app-champion {
+  position: absolute;
+  right: 14px;
+  bottom: 6px;
+  width: 84px;
+  pointer-events: none;
+}
+
 .tile:hover .link {
   color: var(--gold);
 }
