@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  margin: 16px 0;
+}
+
+.battle {
+  margin: 0;
+  padding: 8px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #14111f;
+}

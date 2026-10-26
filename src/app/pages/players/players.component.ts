@@ -9,11 +9,12 @@ import { Match } from '../../models/match.model';
 import { PlayerStanding } from '../../models/player-stats.model';
 import { CHARACTERS, getCharacterName } from '../../models/characters.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
+import { BattleSceneComponent } from '../../components/battle-scene/battle-scene.component';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-players',
-  imports: [ReactiveFormsModule, RouterLink, CharacterIconComponent],
+  imports: [ReactiveFormsModule, RouterLink, CharacterIconComponent, BattleSceneComponent],
   templateUrl: './players.component.html',
   styleUrl: './players.component.css',
 })

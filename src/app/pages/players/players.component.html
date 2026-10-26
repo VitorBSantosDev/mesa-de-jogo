@@ -11,6 +11,8 @@
     <button class="btn" type="button" (click)="loadPlayers()">Tentar novamente</button>
   </div>
 } @else {
+  <app-battle-scene [players]="players()" />
+
   @if (!authService.isLoggedIn()) {
     <p class="box muted">
       Para adicionar, editar ou remover jogadores,
