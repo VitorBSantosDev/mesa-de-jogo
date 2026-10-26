@@ -19,6 +19,12 @@
   margin: 16px 0;
 }
 
+@container (max-width: 420px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
   .filters {
     grid-template-columns: 1fr;

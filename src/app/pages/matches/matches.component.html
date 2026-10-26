@@ -10,27 +10,29 @@
     <button class="btn" type="button" (click)="loadMatches()">Tentar novamente</button>
   </div>
 } @else {
-  <div class="filters box">
-    <label class="field">
-      <span>Jogo</span>
-      <select [(ngModel)]="gameFilter">
-        <option [ngValue]="null">Todos</option>
-        @for (game of sortedGames(); track game.id) {
-          <option [ngValue]="game.id">{{ game.name }}</option>
-        }
-      </select>
-    </label>
+  <app-filter-panel [hasFilters]="hasFilters()">
+    <div class="filters box">
+      <label class="field">
+        <span>Jogo</span>
+        <select [(ngModel)]="gameFilter">
+          <option [ngValue]="null">Todos</option>
+          @for (game of sortedGames(); track game.id) {
+            <option [ngValue]="game.id">{{ game.name }}</option>
+          }
+        </select>
+      </label>
 
-    <label class="field">
-      <span>Jogador</span>
-      <select [(ngModel)]="playerFilter">
-        <option [ngValue]="null">Todos</option>
-        @for (player of sortedPlayers(); track player.id) {
-          <option [ngValue]="player.id">{{ player.name }}</option>
-        }
-      </select>
-    </label>
-  </div>
+      <label class="field">
+        <span>Jogador</span>
+        <select [(ngModel)]="playerFilter">
+          <option [ngValue]="null">Todos</option>
+          @for (player of sortedPlayers(); track player.id) {
+            <option [ngValue]="player.id">{{ player.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </app-filter-panel>
 
   <div class="count">
     <span>{{ filteredMatches().length }} de {{ matches().length }} partidas</span>

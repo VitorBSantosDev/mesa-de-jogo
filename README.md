@@ -41,6 +41,7 @@ Aplicação web para gerir as sessões de jogos de tabuleiro de um grupo de amig
 
 - Adaptado a telemóvel (menu compacto, tabelas ajustadas)
 - Campos numéricos que só aceitam algarismos
+- Filtros que, ao fazer scroll, passam para um botão flutuante com um funil
 
 ## Tecnologias
 
@@ -137,7 +138,7 @@ supabase/         schema.sql e seed.sql
 
 | Conceito                                          | Onde                                                                                                                                                                                                               |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Componentes, `input()` e `output()`           | `GameCardComponent`, `MatchCardComponent`, `CharacterIconComponent`                                                                                                                                          |
+| Componentes, `input()` e `output()`           | `GameCardComponent`, `MatchCardComponent`, `CharacterIconComponent`, `FilterPanelComponent`                                                                                                                                  |
 | Services e injeção de dependências             | `GameService`, `PlayerService`, `MatchService`, `AuthService`, `SupabaseService`                                                                                                                         |
 | Interfaces                                        | `src/app/models` e os tipos `*Row` dos services                                                                                                                                                                |
 | Observables e `subscribe`                       | Todos os pedidos aos services, com estados de carregamento e erro                                                                                                                                                  |
@@ -147,5 +148,6 @@ supabase/         schema.sql e seed.sql
 | Router                                            | 11 rotas, `RouterLink`, parâmetros (`jogos/:id`), query params (`?jogador=`) e `authGuard`                                                                                                                |
 | Reactive Forms                                    | Jogos, jogadores, partidas (`FormArray`), login e criar conta                                                                                                                                                    |
 | Validators                                        | `required`, `email`, `minLength`, `maxLength`, `min`, `max`, `pattern` e validators próprios (data não futura, número de jogadores, sem empate no 1.º lugar, nome único, palavras-passe iguais) |
-| `OnInit`                                        | Carregamento de dados nas páginas                                                                                                                                                                                 |
+| `OnInit`, `AfterViewInit` e `OnDestroy` | Carregamento de dados nas páginas; `FilterPanelComponent` cria um `IntersectionObserver` no `ngAfterViewInit` e desliga-o no `ngOnDestroy` |
+| Projeção de conteúdo (`<ng-content />`) | `FilterPanelComponent` recebe os filtros de Jogos e Partidas |
 | Signals                                           | Estado das páginas (`signal`, `computed`)                                                                                                                                                                     |

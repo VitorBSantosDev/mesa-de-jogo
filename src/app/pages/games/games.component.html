@@ -13,31 +13,33 @@
     <button class="btn" type="button" (click)="loadGames()">Tentar novamente</button>
   </div>
 } @else {
-  <div class="filters box">
-    <label class="field">
-      <span>Pesquisa</span>
-      <input type="search" placeholder="Nome do jogo" [(ngModel)]="searchTerm" />
-    </label>
+  <app-filter-panel [hasFilters]="hasFilters()">
+    <div class="filters box">
+      <label class="field">
+        <span>Pesquisa</span>
+        <input type="search" placeholder="Nome do jogo" [(ngModel)]="searchTerm" />
+      </label>
 
-    <label class="field">
-      <span>Categoria</span>
-      <select [(ngModel)]="categoryFilter">
-        <option value="">Todas</option>
-        @for (category of categories; track category) {
-          <option [value]="category">{{ category }}</option>
-        }
-      </select>
-    </label>
+      <label class="field">
+        <span>Categoria</span>
+        <select [(ngModel)]="categoryFilter">
+          <option value="">Todas</option>
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </label>
 
-    <label class="field">
-      <span>Ordenar por</span>
-      <select [(ngModel)]="sortBy">
-        <option value="name">Nome</option>
-        <option value="played">Mais jogados</option>
-        <option value="duration">Mais rápidos</option>
-      </select>
-    </label>
-  </div>
+      <label class="field">
+        <span>Ordenar por</span>
+        <select [(ngModel)]="sortBy">
+          <option value="name">Nome</option>
+          <option value="played">Mais jogados</option>
+          <option value="duration">Mais rápidos</option>
+        </select>
+      </label>
+    </div>
+  </app-filter-panel>
 
   <div class="count">
     <span>{{ filteredGames().length }} de {{ games().length }} jogos</span>

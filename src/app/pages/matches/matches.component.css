@@ -19,6 +19,12 @@
   gap: 12px;
 }
 
+@container (max-width: 420px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 600px) {
   .filters {
     grid-template-columns: 1fr;

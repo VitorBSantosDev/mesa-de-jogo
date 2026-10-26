@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.anchor {
+  display: flow-root;
+}
+
+.panel {
+  container-type: inline-size;
+}
+
+.panel.floating {
+  display: none;
+  position: fixed;
+  right: 16px;
+  bottom: 84px;
+  z-index: 20;
+  width: min(380px, calc(100vw - 32px));
+}
+
+.panel.floating.open {
+  display: block;
+}
+
+.funnel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  color: var(--accent-ink);
+  background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 78%, #000));
+  border: 1px solid color-mix(in srgb, var(--accent) 70%, #000);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(0 0 0 / .35);
+  cursor: pointer;
+}
+
+.funnel svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+  background: var(--gold);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
