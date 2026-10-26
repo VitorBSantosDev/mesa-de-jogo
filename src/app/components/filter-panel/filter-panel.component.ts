@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, input, signal, viewChild } from '@angular/core';
-
-const HEADER_HEIGHT = 80;
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, inject, input, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-filter-panel',
@@ -11,6 +9,8 @@ const HEADER_HEIGHT = 80;
   },
 })
 export class FilterPanelComponent implements AfterViewInit, OnDestroy {
+  private zone = inject(NgZone);
+
   hasFilters = input(false);
 
   anchor = viewChild.required<ElementRef<HTMLElement>>('anchor');
@@ -19,28 +19,28 @@ export class FilterPanelComponent implements AfterViewInit, OnDestroy {
   isOpen = signal(false);
   anchorHeight = signal(0);
 
-  private observer?: IntersectionObserver;
+  private updatePosition = () => {
+    const headerBottom = document.querySelector('app-header')?.getBoundingClientRect().bottom ?? 0;
+    const box = this.anchor().nativeElement.getBoundingClientRect();
+    const isAboveHeader = box.bottom <= headerBottom;
+
+    if (isAboveHeader === this.isFloating()) return;
+    if (isAboveHeader) this.anchorHeight.set(box.height);
+    this.isFloating.set(isAboveHeader);
+    if (!isAboveHeader) this.closeFilters();
+  };
 
   ngAfterViewInit(): void {
-    this.observer = new IntersectionObserver(
-      ([entry]) => {
-        const isAboveHeader = entry.boundingClientRect.bottom <= HEADER_HEIGHT;
-
-        if (isAboveHeader && !this.isFloating()) {
-          this.anchorHeight.set(entry.boundingClientRect.height);
-        }
-
-        this.isFloating.set(isAboveHeader);
-        if (!isAboveHeader) this.closeFilters();
-      },
-      { rootMargin: `-${HEADER_HEIGHT}px 0px 0px 0px` },
-    );
-
-    this.observer.observe(this.anchor().nativeElement);
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.updatePosition, { passive: true });
+      window.addEventListener('resize', this.updatePosition);
+    });
+    this.updatePosition();
   }
 
   ngOnDestroy(): void {
-    this.observer?.disconnect();
+    window.removeEventListener('scroll', this.updatePosition);
+    window.removeEventListener('resize', this.updatePosition);
   }
 
   toggleFilters(): void {
