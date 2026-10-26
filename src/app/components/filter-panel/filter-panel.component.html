@@ -1,0 +1,23 @@
+<div #anchor class="anchor" [style.height.px]="isFloating() ? anchorHeight() : null">
+  <div id="filters-panel" class="panel" [class.floating]="isFloating()" [class.open]="isOpen()">
+    <ng-content />
+  </div>
+</div>
+
+@if (isFloating()) {
+  <button
+    type="button"
+    class="funnel"
+    aria-controls="filters-panel"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggleFilters()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 5h18l-7 8.5V19l-4 2v-7.5z" />
+    </svg>
+    <span class="sr-only">{{ isOpen() ? 'Fechar filtros' : 'Abrir filtros' }}</span>
+    @if (hasFilters()) {
+      <span class="dot" aria-hidden="true"></span>
+    }
+  </button>
+}

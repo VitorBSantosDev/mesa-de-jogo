@@ -11,10 +11,12 @@ import { Match } from '../../models/match.model';
 import { sortByName } from '../../utils/sort.utils';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
 import { findById } from '../../utils/find.utils';
+import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
+
 
 @Component({
   selector: 'app-matches',
-  imports: [FormsModule, MatchCardComponent],
+  imports: [FormsModule, MatchCardComponent, FilterPanelComponent],
   templateUrl: './matches.component.html',
   styleUrl: './matches.component.css',
 })

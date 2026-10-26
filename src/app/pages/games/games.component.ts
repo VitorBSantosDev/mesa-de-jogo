@@ -8,12 +8,13 @@ import { AuthService } from '../../services/auth.service';
 import { Game, GameCategory, GAME_CATEGORIES } from '../../models/game.model';
 import { Match } from '../../models/match.model';
 import { GameCardComponent } from '../../components/game-card/game-card.component';
+import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
 
 type SortOption = 'name' | 'played' | 'duration';
 
 @Component({
   selector: 'app-games',
-  imports: [GameCardComponent, RouterLink, FormsModule],
+  imports: [GameCardComponent, RouterLink, FormsModule, FilterPanelComponent],
   templateUrl: './games.component.html',
   styleUrl: './games.component.css',
 })
