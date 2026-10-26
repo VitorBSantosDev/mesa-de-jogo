@@ -155,7 +155,7 @@ nav a.active {
   opacity: .75;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
   .appbar {
     padding: 10px 16px;
   }
