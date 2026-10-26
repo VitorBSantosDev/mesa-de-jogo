@@ -1,6 +1,8 @@
 <div class="head">
   <h1>Jogos</h1>
-  <a routerLink="/jogos/novo" class="btn primary">Adicionar jogo</a>
+  @if (authService.isLoggedIn()) {
+    <a routerLink="/jogos/novo" class="btn primary">Adicionar jogo</a>
+  }
 </div>
 
 @if (isLoading()) {
@@ -52,7 +54,7 @@
         @if (games().length) {
           Nenhum jogo corresponde aos filtros.
         } @else {
-          Ainda não há jogos. Adiciona o primeiro.
+          Ainda não há jogos. Adicione o primeiro.
         }
       </p>
     }

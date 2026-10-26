@@ -1,7 +1,9 @@
 <div class="top-bar">
   <a routerLink="/jogos" class="back">← Voltar aos jogos</a>
   @if (game(); as game) {
-    <a class="btn" [routerLink]="['/jogos', game.id, 'editar']">Editar jogo</a>
+    @if (authService.isLoggedIn()) {
+      <a class="btn" [routerLink]="['/jogos', game.id, 'editar']">Editar jogo</a>
+    }
   }
 </div>
 
@@ -54,42 +56,44 @@
     }
   </div>
 
-  <section class="danger-zone">
-    <div class="danger-head">
-      <div>
-        <h2>Remover jogo</h2>
-        <p class="muted">Retira o {{ game.name }} da coleção.</p>
-      </div>
-      @if (!isConfirmingDelete()) {
-        <button type="button" class="btn danger" (click)="askDelete()">Remover jogo</button>
-      }
-    </div>
-
-    @if (isConfirmingDelete()) {
-      <div class="confirm">
-        @if (matches().length) {
-          <p>
-            <strong>Atenção:</strong> este jogo tem {{ matches().length }}
-            {{ matches().length === 1 ? 'partida registada, que também vai ser apagada' : 'partidas registadas, que também vão ser apagadas' }}.
-            A classificação vai ser recalculada.
-          </p>
-        } @else {
-          <p>Este jogo não tem partidas registadas.</p>
-        }
-
-        @if (deleteError()) {
-          <p class="error">{{ deleteError() }}</p>
-        }
-
-        <div class="actions">
-          <button type="button" class="btn danger-solid" [disabled]="isDeleting()" (click)="deleteGame()">
-            {{ isDeleting() ? 'A remover…' : 'Confirmar remoção' }}
-          </button>
-          <button type="button" class="btn" [disabled]="isDeleting()" (click)="cancelDelete()">
-            Manter jogo
-          </button>
+  @if (authService.isLoggedIn()) {
+    <section class="danger-zone">
+      <div class="danger-head">
+        <div>
+          <h2>Remover jogo</h2>
+          <p class="muted">Retira o {{ game.name }} da coleção.</p>
         </div>
+        @if (!isConfirmingDelete()) {
+          <button type="button" class="btn danger" (click)="askDelete()">Remover jogo</button>
+        }
       </div>
-    }
-  </section>
+
+      @if (isConfirmingDelete()) {
+        <div class="confirm">
+          @if (matches().length) {
+            <p>
+              <strong>Atenção:</strong> este jogo tem {{ matches().length }}
+              {{ matches().length === 1 ? 'partida registada, que também vai ser apagada' : 'partidas registadas, que também vão ser apagadas' }}.
+              A classificação vai ser recalculada.
+            </p>
+          } @else {
+            <p>Este jogo não tem partidas registadas.</p>
+          }
+
+          @if (deleteError()) {
+            <p class="error">{{ deleteError() }}</p>
+          }
+
+          <div class="actions">
+            <button type="button" class="btn danger-solid" [disabled]="isDeleting()" (click)="deleteGame()">
+              {{ isDeleting() ? 'A remover…' : 'Confirmar remoção' }}
+            </button>
+            <button type="button" class="btn" [disabled]="isDeleting()" (click)="cancelDelete()">
+              Manter jogo
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  }
 }

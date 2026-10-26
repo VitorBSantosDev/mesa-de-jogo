@@ -27,6 +27,17 @@
       }
     </nav>
 
-    <a routerLink="/partidas/nova" class="btn primary" (click)="closeMenu()">Registar partida</a>
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/partidas/nova" class="btn primary" (click)="closeMenu()">Registar partida</a>
+
+      <div class="account">
+        <span class="user" [title]="authService.userEmail()">{{ authService.userEmail() }}</span>
+        <button type="button" class="btn small" [disabled]="isSigningOut()" (click)="signOut()">
+          {{ isSigningOut() ? 'A sair…' : 'Sair' }}
+        </button>
+      </div>
+    } @else {
+      <a routerLink="/login" class="btn" (click)="closeMenu()">Entrar</a>
+    }
   </div>
 </header>

@@ -3,6 +3,7 @@ import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validator
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
 import { MatchService } from '../../services/match.service';
+import { AuthService } from '../../services/auth.service';
 import { Player, PlayerAvatar } from '../../models/player.model';
 import { Match } from '../../models/match.model';
 import { PlayerStanding } from '../../models/player-stats.model';
@@ -21,6 +22,7 @@ export class PlayersComponent implements OnInit {
   private formBuilder = inject(NonNullableFormBuilder);
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
+  protected authService = inject(AuthService);
 
   getCharacterName = getCharacterName;
   maxPlayers = CHARACTERS.length;
