@@ -133,6 +133,21 @@ nav a.active {
   white-space: nowrap;
 }
 
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .8rem;
+  opacity: .75;
+}
+
 @media (max-width: 760px) {
   .appbar {
     padding: 10px 16px;
@@ -180,5 +195,15 @@ nav a.active {
   .menu .btn {
     text-align: center;
     padding: 12px 14px;
+  }
+
+  .account {
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px solid rgb(255 255 255 / .12);
+  }
+
+  .user {
+    max-width: none;
   }
 }

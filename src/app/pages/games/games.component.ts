@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { MatchService } from '../../services/match.service';
+import { AuthService } from '../../services/auth.service';
 import { Game, GameCategory, GAME_CATEGORIES } from '../../models/game.model';
 import { Match } from '../../models/match.model';
 import { GameCardComponent } from '../../components/game-card/game-card.component';
@@ -20,6 +21,7 @@ export class GamesComponent implements OnInit {
   private gameService = inject(GameService);
   private matchService = inject(MatchService);
   private router = inject(Router);
+  protected authService = inject(AuthService);
 
   categories = GAME_CATEGORIES;
 

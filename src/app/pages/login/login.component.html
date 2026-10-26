@@ -1,0 +1,42 @@
+<div class="login">
+  <h1 class="page-title">Entrar</h1>
+
+  @if (authService.isLoggedIn()) {
+    <div class="box form">
+      <p>Já tem sessão iniciada como <strong>{{ authService.userEmail() }}</strong>.</p>
+      <a routerLink="/" class="btn primary">Ir para a classificação</a>
+    </div>
+  } @else {
+    <form class="box form" [formGroup]="form" (ngSubmit)="signIn()" novalidate>
+      <p class="hint">Para ver os dados não precisa de entrar. Só quem tem conta pode adicionar, editar e remover.</p>
+
+      <label class="field">
+        <span>Email</span>
+        <input type="email" formControlName="email" placeholder="nome@exemplo.pt" autocomplete="email" />
+        @if (showError('email', 'required')) {
+          <small class="error">O email é obrigatório.</small>
+        } @else if (showError('email', 'email')) {
+          <small class="error">Escreva um email válido.</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Palavra-passe</span>
+        <input type="password" formControlName="password" autocomplete="current-password" />
+        @if (showError('password', 'required')) {
+          <small class="error">A palavra-passe é obrigatória.</small>
+        } @else if (showError('password', 'minlength')) {
+          <small class="error">A palavra-passe tem pelo menos 6 caracteres.</small>
+        }
+      </label>
+
+      @if (signInError()) {
+        <p class="error">{{ signInError() }}</p>
+      }
+
+      <button type="submit" class="btn primary" [disabled]="isSigningIn() || form.invalid">
+        {{ isSigningIn() ? 'A entrar…' : 'Entrar' }}
+      </button>
+    </form>
+  }
+</div>

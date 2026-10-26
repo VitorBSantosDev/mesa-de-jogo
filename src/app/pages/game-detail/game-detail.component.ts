@@ -5,6 +5,7 @@ import { forkJoin } from 'rxjs';
 import { GameService } from '../../services/game.service';
 import { MatchService } from '../../services/match.service';
 import { PlayerService } from '../../services/player.service';
+import { AuthService } from '../../services/auth.service';
 import { Game } from '../../models/game.model';
 import { Match, MatchResult } from '../../models/match.model';
 import { Player } from '../../models/player.model';
@@ -25,6 +26,7 @@ export class GameDetailComponent implements OnInit {
   private gameService = inject(GameService);
   private matchService = inject(MatchService);
   private playerService = inject(PlayerService);
+  protected authService = inject(AuthService);
 
   game = signal<Game | undefined>(undefined);
   matches = signal<Match[]>([]);

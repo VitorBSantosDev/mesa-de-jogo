@@ -254,6 +254,8 @@ h3 {
 
 .field select,
 .field input[type='text'],
+.field input[type='email'],
+.field input[type='password'],
 .field input[type='search'],
 .field input[type='number'],
 .field input[type='date'] {

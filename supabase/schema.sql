@@ -53,37 +53,29 @@ alter table games enable row level security;
 alter table matches enable row level security;
 alter table match_results enable row level security;
 
--- Políticas: personagens (só leitura)
+-- Políticas: ler é para todos; criar, alterar e remover só com sessão iniciada
 
-create policy "Ler personagens" on characters for select to anon using (true);
+create policy "Ler personagens" on characters for select to anon, authenticated using (true);
+create policy "Ler jogadores" on players for select to anon, authenticated using (true);
+create policy "Ler jogos" on games for select to anon, authenticated using (true);
+create policy "Ler partidas" on matches for select to anon, authenticated using (true);
+create policy "Ler resultados" on match_results for select to anon, authenticated using (true);
 
--- Políticas: jogadores
+create policy "Criar jogadores" on players for insert to authenticated with check (true);
+create policy "Alterar jogadores" on players for update to authenticated using (true) with check (true);
+create policy "Remover jogadores" on players for delete to authenticated using (true);
 
-create policy "Ler jogadores" on players for select to anon using (true);
-create policy "Criar jogadores" on players for insert to anon with check (true);
-create policy "Alterar jogadores" on players for update to anon using (true) with check (true);
-create policy "Remover jogadores" on players for delete to anon using (true);
+create policy "Criar jogos" on games for insert to authenticated with check (true);
+create policy "Alterar jogos" on games for update to authenticated using (true) with check (true);
+create policy "Remover jogos" on games for delete to authenticated using (true);
 
--- Políticas: jogos
+create policy "Criar partidas" on matches for insert to authenticated with check (true);
+create policy "Alterar partidas" on matches for update to authenticated using (true) with check (true);
+create policy "Remover partidas" on matches for delete to authenticated using (true);
 
-create policy "Ler jogos" on games for select to anon using (true);
-create policy "Criar jogos" on games for insert to anon with check (true);
-create policy "Alterar jogos" on games for update to anon using (true) with check (true);
-create policy "Remover jogos" on games for delete to anon using (true);
-
--- Políticas: partidas
-
-create policy "Ler partidas" on matches for select to anon using (true);
-create policy "Criar partidas" on matches for insert to anon with check (true);
-create policy "Alterar partidas" on matches for update to anon using (true) with check (true);
-create policy "Remover partidas" on matches for delete to anon using (true);
-
--- Políticas: resultados das partidas
-
-create policy "Ler resultados" on match_results for select to anon using (true);
-create policy "Criar resultados" on match_results for insert to anon with check (true);
-create policy "Alterar resultados" on match_results for update to anon using (true) with check (true);
-create policy "Remover resultados" on match_results for delete to anon using (true);
+create policy "Criar resultados" on match_results for insert to authenticated with check (true);
+create policy "Alterar resultados" on match_results for update to authenticated using (true) with check (true);
+create policy "Remover resultados" on match_results for delete to authenticated using (true);
 
 -- Personagens
 
