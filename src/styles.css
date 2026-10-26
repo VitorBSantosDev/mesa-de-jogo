@@ -74,6 +74,10 @@ body {
   background-attachment: fixed;
 }
 
+a {
+  color: var(--accent);
+}
+
 button, input, select, textarea {
   font: inherit;
 }
