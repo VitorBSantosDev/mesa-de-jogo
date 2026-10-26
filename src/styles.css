@@ -349,3 +349,20 @@ h3 {
 .confirm p {
   margin: 0 0 12px;
 }
+
+@media (max-width: 600px) {
+  .back {
+    display: inline-block;
+    padding: 8px 14px;
+    color: var(--ink);
+    font-size: .85rem;
+    letter-spacing: .05em;
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--gold) 50%, var(--line));
+    border-radius: 4px;
+  }
+
+  .back:hover {
+    text-decoration: none;
+  }
+}
