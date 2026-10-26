@@ -32,6 +32,16 @@ export class AuthService {
     );
   }
 
+  signUp(email: string, password: string): Observable<void> {
+    const emailRedirectTo = window.location.origin + window.location.pathname;
+
+    return from(this.supabase.client.auth.signUp({ email, password, options: { emailRedirectTo } })).pipe(
+      map(({ error }) => {
+        if (error) throw error;
+      }),
+    );
+  }
+
   signOut(): Observable<void> {
     return from(this.supabase.client.auth.signOut()).pipe(
       map(({ error }) => {
