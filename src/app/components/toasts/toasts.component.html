@@ -1,6 +1,6 @@
 <div class="toasts" aria-live="polite">
   @for (toast of toastService.toasts(); track toast.id) {
-    <div class="toast box" [class.info]="toast.kind === 'info'" role="status">
+    <div class="toast box" role="status">
       <span>{{ toast.message }}</span>
       <button type="button" class="close" aria-label="Fechar mensagem" (click)="toastService.dismiss(toast.id)">×</button>
     </div>

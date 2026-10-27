@@ -24,10 +24,6 @@
   pointer-events: auto;
 }
 
-.toast.info {
-  border-left-color: var(--accent);
-}
-
 .close {
   min-width: 32px;
   min-height: 32px;

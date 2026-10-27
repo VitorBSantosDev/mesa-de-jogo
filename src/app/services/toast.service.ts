@@ -1,11 +1,8 @@
 import { Service, signal } from '@angular/core';
 
-export type ToastKind = 'success' | 'info';
-
 export interface Toast {
   id: number;
   message: string;
-  kind: ToastKind;
 }
 
 const TOAST_DURATION = 3500;
@@ -16,9 +13,9 @@ export class ToastService {
   readonly toasts = signal<Toast[]>([]);
   private nextId = 0;
 
-  show(message: string, kind: ToastKind = 'success'): void {
+  show(message: string): void {
     const id = ++this.nextId;
-    this.toasts.update((toasts) => [...toasts, { id, message, kind }]);
+    this.toasts.update((toasts) => [...toasts, { id, message }]);
     setTimeout(() => this.dismiss(id), TOAST_DURATION);
   }
 
