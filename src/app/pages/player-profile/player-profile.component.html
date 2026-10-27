@@ -1,0 +1,96 @@
+<a routerLink="/jogadores" class="back">← Voltar aos jogadores</a>
+
+@if (isLoading()) {
+  <p class="state">A carregar o perfil…</p>
+} @else if (errorMessage()) {
+  <div class="state error">
+    <p>{{ errorMessage() }}</p>
+    <button class="btn" type="button" (click)="loadProfile()">Tentar novamente</button>
+  </div>
+} @else if (player(); as player) {
+  <div class="profile-head">
+    <div class="avatar" [style.--avatar-color]="'var(--char-' + player.avatar + ')'">
+      <app-character-icon [avatar]="player.avatar" />
+    </div>
+    <div>
+      <h1 class="page-title">{{ player.name }}</h1>
+      <p class="muted">{{ characterName() }}</p>
+    </div>
+  </div>
+
+  <dl class="facts">
+    <div><dt>Partidas</dt><dd>{{ playerMatches().length }}</dd></div>
+    <div><dt>Vitórias</dt><dd>{{ wins() }}</dd></div>
+    <div><dt>% vitórias</dt><dd>{{ winRate() }}%</dd></div>
+    <div><dt>Melhor pontuação</dt><dd>{{ bestScore() ?? '—' }}</dd></div>
+  </dl>
+
+  <section class="box recent-box">
+    <h2>Forma recente</h2>
+    @if (recentWins().length) {
+      <span class="recent">
+        @for (won of recentWins(); track $index) {
+          <i [class.win]="won" [title]="won ? 'Vitória' : 'Derrota'"></i>
+        }
+      </span>
+      <span class="muted">
+        {{ recentWins().length === 1 ? 'Última partida' : 'Últimas ' + recentWins().length + ' partidas' }}, da mais recente para a mais antiga
+      </span>
+    } @else {
+      <p class="muted">Ainda não jogou nenhuma partida.</p>
+    }
+  </section>
+
+  <div class="columns">
+    <section class="box">
+      <h2>Vitórias por jogo</h2>
+      @for (record of gameRecords(); track record.game.id; let first = $first) {
+        <p class="row" [class.favorite]="first">
+          <a [routerLink]="['/jogos', record.game.id]">{{ record.game.name }}</a>
+          <span>
+            {{ record.wins }} de {{ record.played }}
+            <span class="muted">· {{ record.winRate }}%</span>
+          </span>
+        </p>
+      } @empty {
+        <p class="muted">Ainda não jogou nenhum jogo.</p>
+      }
+      @if (gameRecords().length) {
+        <p class="hint">Em destaque: o jogo que mais jogou.</p>
+      }
+    </section>
+
+    <section class="box">
+      <h2>Frente a frente</h2>
+      @for (rivalry of rivalries(); track rivalry.opponent.id) {
+        <p class="row">
+          <a class="opponent" [routerLink]="['/jogadores', rivalry.opponent.id]">
+            <app-character-icon [avatar]="rivalry.opponent.avatar" />
+            {{ rivalry.opponent.name }}
+          </a>
+          <span>
+            <strong class="ahead">{{ rivalry.ahead }}</strong> –
+            <strong class="behind">{{ rivalry.behind }}</strong>
+            <span class="muted"> · {{ rivalry.together }} {{ rivalry.together === 1 ? 'partida' : 'partidas' }}</span>
+          </span>
+        </p>
+      } @empty {
+        <p class="muted">Ainda não jogou contra ninguém.</p>
+      }
+      @if (rivalries().length) {
+        <p class="hint">Vezes que ficou à frente – vezes que ficou atrás, nas partidas em que jogaram os dois.</p>
+      }
+    </section>
+  </div>
+
+  <h2>Partidas</h2>
+  <div class="list">
+    @for (match of playerMatches(); track match.id) {
+      <app-match-card [match]="match" [players]="players()" [gameName]="getGameName(match.gameId)" />
+    } @empty {
+      <p class="state">Ainda não há partidas deste jogador.</p>
+    }
+  </div>
+} @else {
+  <p class="state error">Não encontrámos este jogador. Pode ter sido removido.</p>
+}

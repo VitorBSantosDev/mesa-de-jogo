@@ -29,6 +29,8 @@
 }
 
 .close {
+  min-width: 32px;
+  min-height: 32px;
   padding: 0 4px;
   font-size: 1.2rem;
   line-height: 1;
@@ -47,7 +49,10 @@
 
 @media (max-width: 600px) {
   .toasts {
-    bottom: 88px;
+    left: 16px;
+    align-items: flex-start;
+    width: calc(100vw - 104px);
+    transform: none;
   }
 }
 
