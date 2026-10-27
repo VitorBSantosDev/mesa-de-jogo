@@ -1,22 +1,5 @@
 .filters {
-  display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 16px 0;
-}
-
-.count {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--muted);
-  margin: 0 0 12px;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 @container (max-width: 420px) {
