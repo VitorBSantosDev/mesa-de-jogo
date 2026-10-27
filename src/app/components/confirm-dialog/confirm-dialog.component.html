@@ -1,0 +1,10 @@
+<dialog #dialog class="box" aria-labelledby="confirm-title" (cancel)="$event.preventDefault(); confirmDialog.answer(false)">
+  @if (confirmDialog.request(); as request) {
+    <h2 id="confirm-title">{{ request.title }}</h2>
+    <p>{{ request.message }}</p>
+    <div class="actions">
+      <button type="button" class="btn primary" (click)="confirmDialog.answer(false)">{{ request.cancelLabel }}</button>
+      <button type="button" class="btn danger" (click)="confirmDialog.answer(true)">{{ request.confirmLabel }}</button>
+    </div>
+  }
+</dialog>

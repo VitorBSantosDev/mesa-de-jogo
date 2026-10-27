@@ -14,15 +14,19 @@ import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
+import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
 
 @Component({
   selector: 'app-players',
   imports: [ReactiveFormsModule, RouterLink, CharacterIconComponent, BattleSceneComponent],
   templateUrl: './players.component.html',
   styleUrl: './players.component.css',
+  host: {
+    '(window:beforeunload)': 'warnBeforeUnload($event)',
+  },
 })
 
-export class PlayersComponent implements OnInit {
+export class PlayersComponent implements OnInit, HasUnsavedChanges {
   private formBuilder = inject(NonNullableFormBuilder);
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
@@ -113,6 +117,14 @@ export class PlayersComponent implements OnInit {
   showError(field: keyof typeof this.form.controls, error: string): boolean {
     const control = this.form.controls[field];
     return control.touched && control.hasError(error);
+  }
+
+  hasUnsavedChanges(): boolean {
+    return this.form.dirty && !this.isSaving();
+  }
+
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges()) event.preventDefault();
   }
 
   startEdit(player: Player): void {

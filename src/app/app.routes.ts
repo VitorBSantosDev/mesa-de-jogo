@@ -10,18 +10,19 @@ import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { RegisterComponent } from './pages/register/register.component';
 import { PlayerProfileComponent } from './pages/player-profile/player-profile.component';
+import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 export const routes: Routes = [
   { path: '', component: RankingComponent, title: 'Classificação · Mesa de Jogo' },
   { path: 'jogos', component: GamesComponent, title: 'Jogos · Mesa de Jogo' },
-  { path: 'jogos/novo', component: GameNewComponent, canActivate: [authGuard], title: 'Adicionar jogo · Mesa de Jogo' },
-  { path: 'jogos/:id/editar', component: GameNewComponent, canActivate: [authGuard], title: 'Editar jogo · Mesa de Jogo' },
+  { path: 'jogos/novo', component: GameNewComponent, canActivate: [authGuard], canDeactivate: [unsavedChangesGuard], title: 'Adicionar jogo · Mesa de Jogo' },
+  { path: 'jogos/:id/editar', component: GameNewComponent, canActivate: [authGuard], canDeactivate: [unsavedChangesGuard], title: 'Editar jogo · Mesa de Jogo' },
   { path: 'jogos/:id', component: GameDetailComponent, title: 'Jogo · Mesa de Jogo' },
-  { path: 'jogadores', component: PlayersComponent, title: 'Jogadores · Mesa de Jogo' },
+  { path: 'jogadores', component: PlayersComponent, canDeactivate: [unsavedChangesGuard], title: 'Jogadores · Mesa de Jogo' },
   { path: 'jogadores/:id', component: PlayerProfileComponent, title: 'Jogador · Mesa de Jogo' },
   { path: 'partidas', component: MatchesComponent, title: 'Partidas · Mesa de Jogo' },
-  { path: 'partidas/nova', component: MatchNewComponent, canActivate: [authGuard], title: 'Nova partida · Mesa de Jogo' },
-  { path: 'partidas/:id/editar', component: MatchNewComponent, canActivate: [authGuard], title: 'Editar partida · Mesa de Jogo' },
+  { path: 'partidas/nova', component: MatchNewComponent, canActivate: [authGuard], canDeactivate: [unsavedChangesGuard], title: 'Nova partida · Mesa de Jogo' },
+  { path: 'partidas/:id/editar', component: MatchNewComponent, canActivate: [authGuard], canDeactivate: [unsavedChangesGuard], title: 'Editar partida · Mesa de Jogo' },
   { path: 'login', component: LoginComponent, title: 'Entrar · Mesa de Jogo' },
   { path: 'criar-conta', component: RegisterComponent, title: 'Criar conta · Mesa de Jogo' },
   { path: '**', redirectTo: '' },
