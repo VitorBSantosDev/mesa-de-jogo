@@ -11,6 +11,7 @@ import { CHARACTERS, getCharacterName } from '../../models/characters.model';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { BattleSceneComponent } from '../../components/battle-scene/battle-scene.component';
 import { RouterLink } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-players',
@@ -24,6 +25,7 @@ export class PlayersComponent implements OnInit {
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
   protected authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   getCharacterName = getCharacterName;
   maxPlayers = CHARACTERS.length;
@@ -135,6 +137,7 @@ export class PlayersComponent implements OnInit {
     if (editingId === null) {
       this.playerService.create(player).subscribe({
         next: (created) => {
+          this.toastService.show('Jogador adicionado.');
           this.players.update((players) => [...players, created]);
           this.form.reset();
           this.isSaving.set(false);
@@ -147,6 +150,7 @@ export class PlayersComponent implements OnInit {
     } else {
       this.playerService.update(editingId, player).subscribe({
         next: (updated) => {
+          this.toastService.show('Alterações ao jogador guardadas.');
           this.players.update((players) => players.map((item) => (item.id === updated.id ? updated : item)));
           this.cancelEdit();
           this.isSaving.set(false);
@@ -174,6 +178,7 @@ export class PlayersComponent implements OnInit {
 
     this.playerService.delete(id).subscribe({
       next: () => {
+        this.toastService.show('Jogador removido.');
         this.players.update((players) => players.filter((player) => player.id !== id));
         this.confirmingDeleteId.set(null);
         this.isDeleting.set(false);

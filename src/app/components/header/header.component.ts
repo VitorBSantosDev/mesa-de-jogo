@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   private router = inject(Router);
   protected authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   links = [
     { path: '/', label: 'Classificação' },
@@ -35,6 +37,7 @@ export class HeaderComponent {
 
     this.authService.signOut().subscribe({
       next: () => {
+        this.toastService.show('Sessão terminada.');
         this.isSigningOut.set(false);
         this.closeMenu();
         this.router.navigateByUrl('/');

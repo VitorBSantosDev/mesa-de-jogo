@@ -23,6 +23,7 @@ import { getTodayIso } from '../../utils/date.utils';
 import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
+import { ToastService } from '../../services/toast.service';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -43,6 +44,7 @@ export class MatchNewComponent implements OnInit {
   private matchService = inject(MatchService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private toastService = inject(ToastService);
 
   today = getTodayIso();
 
@@ -234,7 +236,10 @@ export class MatchNewComponent implements OnInit {
     this.saveError.set('');
 
     request.subscribe({
-      next: () => this.router.navigate(['/partidas']),
+      next: () => {
+        this.toastService.show(editingId === null ? 'Partida registada.' : 'Alterações à partida guardadas.');
+        this.router.navigate(['/partidas']);
+      },
       error: () => {
         this.saveError.set('Não foi possível guardar a partida. Verifique a ligação e tente novamente.');
         this.isSaving.set(false);
@@ -259,7 +264,10 @@ export class MatchNewComponent implements OnInit {
     this.deleteError.set('');
 
     this.matchService.delete(editingId).subscribe({
-      next: () => this.router.navigate(['/partidas']),
+      next: () => {
+        this.toastService.show('Partida eliminada.');
+        this.router.navigate(['/partidas']);
+      },
       error: () => {
         this.deleteError.set('Não foi possível eliminar a partida. Verifique a ligação e tente novamente.');
         this.isDeleting.set(false);
