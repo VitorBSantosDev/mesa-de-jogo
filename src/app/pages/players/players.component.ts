@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
 import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
 import { hasVisibleError } from '../../utils/form.utils';
+import { getPlayerStats } from '../../utils/match.utils';
 
 @Component({
   selector: 'app-players',
@@ -76,7 +77,7 @@ export class PlayersComponent implements OnInit, HasUnsavedChanges {
 
   standings = computed<PlayerStanding[]>(() =>
     this.players()
-      .map((player) => ({ player, ...this.matchService.getPlayerStats(this.matches(), player.id) }))
+      .map((player) => ({ player, ...getPlayerStats(this.matches(), player.id) }))
       .sort((standingA, standingB) => standingA.player.name.localeCompare(standingB.player.name, 'pt')),
   );
 

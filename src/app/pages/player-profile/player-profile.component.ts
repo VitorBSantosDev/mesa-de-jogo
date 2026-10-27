@@ -9,11 +9,11 @@ import { RealtimeService } from '../../services/realtime.service';
 import { Player } from '../../models/player.model';
 import { Game } from '../../models/game.model';
 import { Match } from '../../models/match.model';
-import { calculateWinRate } from '../../utils/stats.utils';
 import { getCharacterName } from '../../models/characters.model';
 import { findById } from '../../utils/find.utils';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
+import { calculateWinRate, countWins, getMatchesOfPlayer, getPlayerStats, isWinner, sortByDateDesc } from '../../utils/match.utils';
 
 const RECENT_MATCHES = 5;
 
@@ -63,10 +63,10 @@ export class PlayerProfileComponent implements OnInit {
   });
 
   playerMatches = computed(() =>
-    this.matchService.sortByDateDesc(this.matchService.getMatchesOfPlayer(this.matches(), this.playerId())),
+    sortByDateDesc(getMatchesOfPlayer(this.matches(), this.playerId())),
   );
 
-  stats = computed(() => this.matchService.getPlayerStats(this.playerMatches(), this.playerId()));
+  stats = computed(() => getPlayerStats(this.playerMatches(), this.playerId()));
 
   bestScore = computed(() => {
     const scores = this.playerMatches().flatMap((match) =>
@@ -78,14 +78,14 @@ export class PlayerProfileComponent implements OnInit {
   recentWins = computed(() =>
     this.playerMatches()
       .slice(0, RECENT_MATCHES)
-      .map((match) => this.matchService.isWinner(match, this.playerId())),
+      .map((match) => isWinner(match, this.playerId())),
   );
 
   gameRecords = computed<GameRecord[]>(() =>
     this.games()
       .map((game) => {
         const gameMatches = this.playerMatches().filter((match) => match.gameId === game.id);
-        const wins = this.matchService.countWins(gameMatches, this.playerId());
+        const wins = countWins(gameMatches, this.playerId());
         return { game, played: gameMatches.length, wins, winRate: calculateWinRate(wins, gameMatches.length) };
       })
       .filter((record) => record.played > 0)
