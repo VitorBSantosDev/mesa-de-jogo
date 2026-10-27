@@ -3,6 +3,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthError } from '@supabase/supabase-js';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   protected authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   isSigningIn = signal(false);
   signInError = signal('');
@@ -43,6 +45,7 @@ export class LoginComponent {
 
     this.authService.signIn(email.trim(), password).subscribe({
       next: () => {
+        this.toastService.show('Sessão iniciada.');
         const returnUrl = this.route.snapshot.queryParamMap.get('voltar') ?? '/';
         this.router.navigateByUrl(returnUrl);
       },

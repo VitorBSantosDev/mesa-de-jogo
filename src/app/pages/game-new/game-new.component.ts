@@ -12,6 +12,7 @@ import { GameCardComponent } from '../../components/game-card/game-card.componen
 import { resizeImage } from '../../utils/image.utils';
 import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
+import { ToastService } from '../../services/toast.service';
 
 const BYTES_PER_MB = 1024 * 1024;
 const MAX_IMAGE_MB = 5;
@@ -29,6 +30,7 @@ export class GameNewComponent implements OnInit {
   private gameService = inject(GameService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private toastService = inject(ToastService);
 
   categories = GAME_CATEGORIES;
   maxImageMb = MAX_IMAGE_MB;
@@ -180,7 +182,10 @@ export class GameNewComponent implements OnInit {
     this.saveError.set('');
 
     request.subscribe({
-      next: (saved) => this.router.navigate(['/jogos', saved.id]),
+      next: (saved) => {
+        this.toastService.show(editingId === null ? 'Jogo adicionado.' : 'Alterações ao jogo guardadas.');
+        this.router.navigate(['/jogos', saved.id]);
+      },
       error: () => {
         this.saveError.set('Não foi possível guardar o jogo. Verifique a ligação e tente novamente.');
         this.isSaving.set(false);

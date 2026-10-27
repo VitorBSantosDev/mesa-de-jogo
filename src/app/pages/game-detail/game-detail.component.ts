@@ -12,6 +12,7 @@ import { Player } from '../../models/player.model';
 import { PlayerWins } from '../../models/player-stats.model';
 import { findById } from '../../utils/find.utils';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-game-detail',
@@ -27,6 +28,7 @@ export class GameDetailComponent implements OnInit {
   private matchService = inject(MatchService);
   private playerService = inject(PlayerService);
   protected authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   game = signal<Game | undefined>(undefined);
   matches = signal<Match[]>([]);
@@ -103,7 +105,10 @@ export class GameDetailComponent implements OnInit {
     this.deleteError.set('');
 
     this.gameService.delete(game.id).subscribe({
-      next: () => this.router.navigate(['/jogos']),
+      next: () => {
+        this.toastService.show('Jogo removido.');
+        this.router.navigate(['/jogos']);
+      },
       error: () => {
         this.deleteError.set('Não foi possível remover o jogo. Verifique a ligação e tente novamente.');
         this.isDeleting.set(false);
