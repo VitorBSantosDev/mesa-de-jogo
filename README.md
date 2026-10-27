@@ -166,6 +166,6 @@ supabase/         schema.sql e seed.sql
 
 ## Autor
 
-**Vitor Santos<o seu nome completo></o>**, projeto final da formação de Angular (ServiceNow 2026).
+**Vitor Santos**, projeto final da formação de Angular (ServiceNow 2026).
 
 - GitHub: [@VitorBSantosDev](https://github.com/VitorBSantosDev)
