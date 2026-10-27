@@ -14,6 +14,7 @@ import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
+import { getMatchesOfPlayer, getPlayerStats, getWinnerId, isWinner, sortByDateDesc } from '../../utils/match.utils';
 
 const MIN_MATCHES_FOR_RATE = 3;
 const RECENT_MATCHES = 5;
@@ -54,16 +55,15 @@ export class RankingComponent implements OnInit {
   errorMessage = signal('');
 
   ranking = computed<RankingRow[]>(() => {
-    const matchesByDate = this.matchService.sortByDateDesc(this.matches());
+    const matchesByDate = sortByDateDesc(this.matches());
 
     return this.players()
       .map((player) => ({
         player,
-        ...this.matchService.getPlayerStats(matchesByDate, player.id),
-        recentWins: this.matchService
-          .getMatchesOfPlayer(matchesByDate, player.id)
+        ...getPlayerStats(matchesByDate, player.id),
+        recentWins: getMatchesOfPlayer(matchesByDate, player.id)
           .slice(0, RECENT_MATCHES)
-          .map((match) => this.matchService.isWinner(match, player.id)),
+          .map((match) => isWinner(match, player.id)),
       }))
       .sort(
         (rowA, rowB) =>
@@ -93,7 +93,7 @@ export class RankingComponent implements OnInit {
 
       for (const match of this.matches()) {
         if (match.gameId !== game.id) continue;
-        const winnerId = this.matchService.getWinnerId(match);
+        const winnerId = getWinnerId(match);
         winsByPlayer.set(winnerId, (winsByPlayer.get(winnerId) ?? 0) + 1);
       }
 

@@ -14,6 +14,7 @@ import { findById } from '../../utils/find.utils';
 import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
+import { sortByDateDesc } from '../../utils/match.utils';
 
 
 @Component({
@@ -55,7 +56,7 @@ export class MatchesComponent implements OnInit {
         (playerId === null || match.results.some((result) => result.playerId === playerId)),
     );
 
-    return this.matchService.sortByDateDesc(filtered);
+    return sortByDateDesc(filtered);
   });
 
   hasFilters = computed(() => this.gameFilter() !== null || this.playerFilter() !== null);

@@ -2,8 +2,6 @@ import { Service, inject } from '@angular/core';
 import { Observable, map, switchMap } from 'rxjs';
 import { SupabaseService } from './supabase.service';
 import { Match, MatchResult, NewMatch } from '../models/match.model';
-import { PlayerStats } from '../models/player-stats.model';
-import { calculateWinRate } from '../utils/stats.utils';
 
 const MATCH_COLUMNS = 'id, game_id, date, match_results(player_id, score)';
 
@@ -83,36 +81,5 @@ export class MatchService {
   delete(id: number): Observable<void> {
     const request = this.supabase.client.from('matches').delete().eq('id', id);
     return this.supabase.execute(request).pipe(map(() => undefined));
-  }
-
-  isWinner(match: Match, playerId: number): boolean {
-    return this.getWinnerId(match) === playerId;
-  }
-
-  getMatchesOfPlayer(matches: Match[], playerId: number): Match[] {
-    return matches.filter((match) => match.results.some((result) => result.playerId === playerId));
-  }
-
-  countWins(matches: Match[], playerId: number): number {
-    return matches.filter((match) => this.isWinner(match, playerId)).length;
-  }
-
-  getPlayerStats(matches: Match[], playerId: number): PlayerStats {
-    const playerMatches = this.getMatchesOfPlayer(matches, playerId);
-    const wins = this.countWins(playerMatches, playerId);
-    return { played: playerMatches.length, wins, winRate: calculateWinRate(wins, playerMatches.length) };
-  }
-
-  sortByDateDesc(matches: Match[]): Match[] {
-    return [...matches].sort((matchA, matchB) => matchB.date.localeCompare(matchA.date));
-  }
-
-  getWinnerId(match: Match): number {
-    const best = match.results.reduce((playerA, playerB) => (playerB.score > playerA.score ? playerB : playerA));
-    return best.playerId;
-  }
-
-  sortByScore(match: Match): MatchResult[] {
-    return [...match.results].sort((resultA, resultB) => resultB.score - resultA.score);
   }
 }

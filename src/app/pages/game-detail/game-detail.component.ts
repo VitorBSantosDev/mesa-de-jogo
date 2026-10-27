@@ -13,6 +13,7 @@ import { PlayerWins } from '../../models/player-stats.model';
 import { findById } from '../../utils/find.utils';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
 import { ToastService } from '../../services/toast.service';
+import { countWins, sortByDateDesc } from '../../utils/match.utils';
 
 @Component({
   selector: 'app-game-detail',
@@ -51,7 +52,7 @@ export class GameDetailComponent implements OnInit {
     }).subscribe({
       next: ({ game, matches, players }) => {
         this.game.set(game);
-        this.matches.set(this.matchService.sortByDateDesc(matches));
+        this.matches.set(sortByDateDesc(matches));
         this.players.set(players);
         this.isLoading.set(false);
       },
@@ -70,7 +71,7 @@ export class GameDetailComponent implements OnInit {
     this.players()
       .map((player) => ({
         player,
-        wins: this.matchService.countWins(this.matches(), player.id),
+        wins: countWins(this.matches(), player.id),
       }))
       .filter((player) => player.wins > 0)
       .sort((playerA, playerB) => playerB.wins - playerA.wins),
