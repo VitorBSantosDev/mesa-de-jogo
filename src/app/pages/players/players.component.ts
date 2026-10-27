@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { PlayerService } from '../../services/player.service';
@@ -12,6 +12,8 @@ import { CharacterIconComponent } from '../../components/character-icon/characte
 import { BattleSceneComponent } from '../../components/battle-scene/battle-scene.component';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
   selector: 'app-players',
@@ -26,6 +28,8 @@ export class PlayersComponent implements OnInit {
   private matchService = inject(MatchService);
   protected authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private realtimeService = inject(RealtimeService);
+  private destroyRef = inject(DestroyRef);
 
   getCharacterName = getCharacterName;
   maxPlayers = CHARACTERS.length;
@@ -80,10 +84,14 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPlayers();
+    this.realtimeService
+      .watch('players', 'matches', 'match_results')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadPlayers(false));
   }
 
-  loadPlayers(): void {
-    this.isLoading.set(true);
+  loadPlayers(showLoading = true): void {
+    if (showLoading) this.isLoading.set(true);
     this.errorMessage.set('');
 
     forkJoin({

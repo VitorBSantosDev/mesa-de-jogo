@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { GameService } from '../../services/game.service';
@@ -12,6 +12,8 @@ import { CharacterIconComponent } from '../../components/character-icon/characte
 import { ChampionComponent } from '../../components/champion/champion.component';
 import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 
 const MIN_MATCHES_FOR_RATE = 3;
 const RECENT_MATCHES = 5;
@@ -38,6 +40,8 @@ export class RankingComponent implements OnInit {
   private gameService = inject(GameService);
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
+  private realtimeService = inject(RealtimeService);
+  private destroyRef = inject(DestroyRef);
 
   minMatchesForRate = MIN_MATCHES_FOR_RATE;
   recentMatches = RECENT_MATCHES;
@@ -120,10 +124,14 @@ export class RankingComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRanking();
+    this.realtimeService
+      .watch('games', 'players', 'matches', 'match_results')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadRanking(false));
   }
 
-  loadRanking(): void {
-    this.isLoading.set(true);
+  loadRanking(showLoading = true): void {
+    if (showLoading) this.isLoading.set(true);
     this.errorMessage.set('');
 
     forkJoin({
