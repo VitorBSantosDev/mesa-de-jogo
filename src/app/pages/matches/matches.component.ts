@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -12,6 +12,8 @@ import { sortByName } from '../../utils/sort.utils';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
 import { findById } from '../../utils/find.utils';
 import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 
 
 @Component({
@@ -26,6 +28,8 @@ export class MatchesComponent implements OnInit {
   private gameService = inject(GameService);
   private playerService = inject(PlayerService);
   private matchService = inject(MatchService);
+  private realtimeService = inject(RealtimeService);
+  private destroyRef = inject(DestroyRef);
 
   games = signal<Game[]>([]);
   players = signal<Player[]>([]);
@@ -65,10 +69,14 @@ export class MatchesComponent implements OnInit {
     if (playerId) this.playerFilter.set(playerId);
 
     this.loadMatches();
+    this.realtimeService
+      .watch('games', 'players', 'matches', 'match_results')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadMatches(false));
   }
 
-  loadMatches(): void {
-    this.isLoading.set(true);
+  loadMatches(showLoading = true): void {
+    if (showLoading) this.isLoading.set(true);
     this.errorMessage.set('');
 
     forkJoin({

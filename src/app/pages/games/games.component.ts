@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -9,6 +9,8 @@ import { Game, GameCategory, GAME_CATEGORIES } from '../../models/game.model';
 import { Match } from '../../models/match.model';
 import { GameCardComponent } from '../../components/game-card/game-card.component';
 import { FilterPanelComponent } from '../../components/filter-panel/filter-panel.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 
 type SortOption = 'name' | 'played' | 'duration';
 
@@ -23,6 +25,8 @@ export class GamesComponent implements OnInit {
   private matchService = inject(MatchService);
   private router = inject(Router);
   protected authService = inject(AuthService);
+  private realtimeService = inject(RealtimeService);
+  private destroyRef = inject(DestroyRef);
 
   categories = GAME_CATEGORIES;
 
@@ -38,10 +42,14 @@ export class GamesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadGames();
+    this.realtimeService
+      .watch('games', 'matches')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadGames(false));
   }
 
-  loadGames(): void {
-    this.isLoading.set(true);
+  loadGames(showLoading = true): void {
+    if (showLoading) this.isLoading.set(true);
     this.errorMessage.set('');
 
     forkJoin({
