@@ -2,10 +2,6 @@
   align-items: baseline;
 }
 
-.muted {
-  color: var(--muted);
-}
-
 .add-form {
   display: flex;
   flex-direction: column;

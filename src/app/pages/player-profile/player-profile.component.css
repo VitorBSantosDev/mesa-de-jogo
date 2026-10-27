@@ -30,36 +30,15 @@ h2 {
 }
 
 .muted {
-  color: var(--muted);
   margin: 4px 0 0;
 }
 
 .facts {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0 0 14px;
-}
-
-.facts div {
-  background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--line));
-  border-radius: 6px;
-  padding: 10px 12px;
-}
-
-.facts dt {
-  font-family: var(--f-display);
-  font-size: .72rem;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  margin-bottom: 14px;
 }
 
 .facts dd {
-  margin: 4px 0 0;
   font-size: 1.3rem;
-  font-weight: 700;
 }
 
 .recent-box {
@@ -80,20 +59,12 @@ h2 {
 }
 
 .recent {
-  display: inline-flex;
   gap: 5px;
 }
 
 .recent i {
   width: 14px;
   height: 14px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-}
-
-.recent i.win {
-  border-color: var(--gold);
-  background: var(--gold);
 }
 
 .columns {
@@ -146,17 +117,7 @@ h2 {
   color: var(--muted);
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 @media (max-width: 700px) {
-  .facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
