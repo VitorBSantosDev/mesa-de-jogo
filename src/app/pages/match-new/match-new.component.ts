@@ -24,6 +24,7 @@ import { sortByName } from '../../utils/sort.utils';
 import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 import { ToastService } from '../../services/toast.service';
+import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -35,9 +36,12 @@ type ResultForm = FormGroup<{
   imports: [ReactiveFormsModule, RouterLink, DatePipe, CharacterIconComponent, WinnerRingComponent, DigitsOnlyDirective],
   templateUrl: './match-new.component.html',
   styleUrl: './match-new.component.css',
+  host: {
+    '(window:beforeunload)': 'warnBeforeUnload($event)',
+  },
 })
 
-export class MatchNewComponent implements OnInit {
+export class MatchNewComponent implements OnInit, HasUnsavedChanges {
   private formBuilder = inject(NonNullableFormBuilder);
   private gameService = inject(GameService);
   private playerService = inject(PlayerService);
@@ -178,6 +182,14 @@ export class MatchNewComponent implements OnInit {
     return this.results.controls.some((result) => result.controls.playerId.value === playerId);
   }
 
+  hasUnsavedChanges(): boolean {
+    return this.form.dirty && !this.isSaving() && !this.isDeleting();
+  }
+
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges()) event.preventDefault();
+  }
+
   togglePlayer(playerId: number): void {
     const index = this.results.controls.findIndex((result) => result.controls.playerId.value === playerId);
 
@@ -186,6 +198,7 @@ export class MatchNewComponent implements OnInit {
     } else {
       this.results.removeAt(index);
     }
+    this.form.markAsDirty();
   }
 
   findPlayer(id: number): Player | undefined {

@@ -13,6 +13,7 @@ import { resizeImage } from '../../utils/image.utils';
 import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 import { ToastService } from '../../services/toast.service';
+import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
 
 const BYTES_PER_MB = 1024 * 1024;
 const MAX_IMAGE_MB = 5;
@@ -23,9 +24,12 @@ const MAX_IMAGE_BYTES = MAX_IMAGE_MB * BYTES_PER_MB;
   imports: [ReactiveFormsModule, RouterLink, GameCardComponent, DigitsOnlyDirective],
   templateUrl: './game-new.component.html',
   styleUrl: './game-new.component.css',
+  host: {
+    '(window:beforeunload)': 'warnBeforeUnload($event)',
+  },
 })
 
-export class GameNewComponent implements OnInit {
+export class GameNewComponent implements OnInit, HasUnsavedChanges {
   private formBuilder = inject(NonNullableFormBuilder);
   private gameService = inject(GameService);
   private router = inject(Router);
@@ -108,6 +112,14 @@ export class GameNewComponent implements OnInit {
     });
   }
 
+  hasUnsavedChanges(): boolean {
+    return this.form.dirty && !this.isSaving();
+  }
+
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges()) event.preventDefault();
+  }
+
   async onImageSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -129,6 +141,7 @@ export class GameNewComponent implements OnInit {
     try {
       const dataUrl = await resizeImage(file);
       this.form.controls.image.setValue(dataUrl);
+      this.form.markAsDirty();
     } catch {
       this.imageError.set('Não foi possível ler esta imagem. Experimente outro ficheiro.');
     } finally {
@@ -138,6 +151,7 @@ export class GameNewComponent implements OnInit {
 
   removeImage(): void {
     this.form.controls.image.setValue('');
+    this.form.markAsDirty();
     this.imageError.set('');
   }
 
