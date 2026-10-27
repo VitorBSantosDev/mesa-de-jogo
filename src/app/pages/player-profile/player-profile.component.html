@@ -20,8 +20,8 @@
 
   <dl class="facts">
     <div><dt>Partidas</dt><dd>{{ playerMatches().length }}</dd></div>
-    <div><dt>Vitórias</dt><dd>{{ wins() }}</dd></div>
-    <div><dt>% vitórias</dt><dd>{{ winRate() }}%</dd></div>
+    <div><dt>Vitórias</dt><dd>{{ stats().wins }}</dd></div>
+    <div><dt>% vitórias</dt><dd>{{ stats().winRate }}%</dd></div>
     <div><dt>Melhor pontuação</dt><dd>{{ bestScore() ?? '—' }}</dd></div>
   </dl>
 

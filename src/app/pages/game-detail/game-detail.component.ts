@@ -51,7 +51,7 @@ export class GameDetailComponent implements OnInit {
     }).subscribe({
       next: ({ game, matches, players }) => {
         this.game.set(game);
-        this.matches.set([...matches].sort((matchA, matchB) => matchB.date.localeCompare(matchA.date)));
+        this.matches.set(this.matchService.sortByDateDesc(matches));
         this.players.set(players);
         this.isLoading.set(false);
       },
@@ -70,7 +70,7 @@ export class GameDetailComponent implements OnInit {
     this.players()
       .map((player) => ({
         player,
-        wins: this.matches().filter((match) => this.matchService.getWinnerId(match) === player.id).length,
+        wins: this.matchService.countWins(this.matches(), player.id),
       }))
       .filter((player) => player.wins > 0)
       .sort((playerA, playerB) => playerB.wins - playerA.wins),

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthError } from '@supabase/supabase-js';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { hasVisibleError } from '../../utils/form.utils';
 
 @Component({
   selector: 'app-login',
@@ -28,8 +29,7 @@ export class LoginComponent {
   });
 
   showError(field: keyof typeof this.form.controls, error: string): boolean {
-    const control = this.form.controls[field];
-    return control.touched && control.hasError(error);
+    return hasVisibleError(this.form.controls[field], error);
   }
 
   signIn(): void {

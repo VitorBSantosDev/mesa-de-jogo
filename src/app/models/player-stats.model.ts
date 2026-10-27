@@ -5,7 +5,10 @@ export interface PlayerWins {
   wins: number;
 }
 
-export interface PlayerStanding extends PlayerWins {
+export interface PlayerStats {
   played: number;
+  wins: number;
   winRate: number;
 }
+
+export interface PlayerStanding extends PlayerWins, PlayerStats {}

@@ -96,7 +96,6 @@ function getFlameColor(t: number, k: number): string {
   return PX.i;
 }
 
-// Leque de feixes de fogo que sobem e se abrem para fora a partir das costas
 function drawFlameFan(
   ctx: CanvasRenderingContext2D,
   origins: FlameOrigin[],
@@ -164,7 +163,6 @@ function drawFireWings(ctx: CanvasRenderingContext2D, x: number, baseline: numbe
   }
 }
 
-// Chicote de fogo: sai do punho, desce até ao chão e arrasta-se para a direita, à frente dos pés do Balrog
 function drawFireWhip(ctx: CanvasRenderingContext2D, x: number, baseline: number, frame: number): void {
   const top = baseline - 40;
   const hand = [x + 3, top + 28];
@@ -236,7 +234,6 @@ function drawDarkSide(ctx: CanvasRenderingContext2D, frame: number): void {
     ctx.fillRect(HALF, y, SCENE_WIDTH - HALF, height);
   });
 
-  // fumo: sempre os mesmos números "aleatórios", para as nuvens não mudarem de sítio a cada fotograma
   let seed = 7;
   const random = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const tones = ['#2b2427', '#352d30', '#3f3639', '#2f282b'];
@@ -299,7 +296,6 @@ function drawHeroes(ctx: CanvasRenderingContext2D, heroes: Player[], frame: numb
     };
   });
 
-  // a fila de trás é desenhada primeiro, para a da frente ficar por cima
   [...positioned.filter((item) => item.isBackRank), ...positioned.filter((item) => !item.isBackRank)].forEach(
     ({ hero, x, baseline }) => drawSprite(ctx, getSpriteGrid(hero.avatar), x, baseline, false, frame),
   );

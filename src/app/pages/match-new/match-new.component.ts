@@ -25,6 +25,7 @@ import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 import { ToastService } from '../../services/toast.service';
 import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
+import { hasVisibleError } from '../../utils/form.utils';
 
 type ResultForm = FormGroup<{
   playerId: FormControl<number>;
@@ -210,8 +211,7 @@ export class MatchNewComponent implements OnInit, HasUnsavedChanges {
   }
 
   showError(field: 'gameId' | 'date', error: string): boolean {
-    const control = this.form.controls[field];
-    return control.touched && control.hasError(error);
+    return hasVisibleError(this.form.controls[field], error);
   }
 
   showPlayersError(error: string): boolean {
@@ -219,9 +219,7 @@ export class MatchNewComponent implements OnInit, HasUnsavedChanges {
   }
 
   showScoreError(error: string): boolean {
-    return this.results.controls.some(
-      (result) => result.controls.score.touched && result.controls.score.hasError(error),
-    );
+    return this.results.controls.some((result) => hasVisibleError(result.controls.score, error));
   }
 
   submit(): void {

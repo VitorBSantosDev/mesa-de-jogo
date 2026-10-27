@@ -54,25 +54,17 @@ export class RankingComponent implements OnInit {
   errorMessage = signal('');
 
   ranking = computed<RankingRow[]>(() => {
-    const matchesByDate = [...this.matches()].sort((matchA, matchB) => matchB.date.localeCompare(matchA.date));
+    const matchesByDate = this.matchService.sortByDateDesc(this.matches());
 
     return this.players()
-      .map((player) => {
-        const playerMatches = matchesByDate.filter((match) =>
-          match.results.some((result) => result.playerId === player.id),
-        );
-        const results = playerMatches.map((match) => this.matchService.getWinnerId(match) === player.id);
-        const wins = results.filter((won) => won).length;
-        const played = playerMatches.length;
-
-        return {
-          player,
-          wins,
-          played,
-          winRate: played ? Math.round((wins / played) * 100) : 0,
-          recentWins: results.slice(0, RECENT_MATCHES),
-        };
-      })
+      .map((player) => ({
+        player,
+        ...this.matchService.getPlayerStats(matchesByDate, player.id),
+        recentWins: this.matchService
+          .getMatchesOfPlayer(matchesByDate, player.id)
+          .slice(0, RECENT_MATCHES)
+          .map((match) => this.matchService.isWinner(match, player.id)),
+      }))
       .sort(
         (rowA, rowB) =>
           rowB.wins - rowA.wins ||
