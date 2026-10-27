@@ -9,6 +9,7 @@ import { RealtimeService } from '../../services/realtime.service';
 import { Player } from '../../models/player.model';
 import { Game } from '../../models/game.model';
 import { Match } from '../../models/match.model';
+import { calculateWinRate } from '../../utils/stats.utils';
 import { getCharacterName } from '../../models/characters.model';
 import { findById } from '../../utils/find.utils';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
@@ -62,17 +63,10 @@ export class PlayerProfileComponent implements OnInit {
   });
 
   playerMatches = computed(() =>
-    this.matches()
-      .filter((match) => match.results.some((result) => result.playerId === this.playerId()))
-      .sort((matchA, matchB) => matchB.date.localeCompare(matchA.date)),
+    this.matchService.sortByDateDesc(this.matchService.getMatchesOfPlayer(this.matches(), this.playerId())),
   );
 
-  wins = computed(() => this.playerMatches().filter((match) => this.hasWon(match)).length);
-
-  winRate = computed(() => {
-    const played = this.playerMatches().length;
-    return played ? Math.round((this.wins() / played) * 100) : 0;
-  });
+  stats = computed(() => this.matchService.getPlayerStats(this.playerMatches(), this.playerId()));
 
   bestScore = computed(() => {
     const scores = this.playerMatches().flatMap((match) =>
@@ -81,15 +75,18 @@ export class PlayerProfileComponent implements OnInit {
     return scores.length ? Math.max(...scores) : null;
   });
 
-  recentWins = computed(() => this.playerMatches().slice(0, RECENT_MATCHES).map((match) => this.hasWon(match)));
+  recentWins = computed(() =>
+    this.playerMatches()
+      .slice(0, RECENT_MATCHES)
+      .map((match) => this.matchService.isWinner(match, this.playerId())),
+  );
 
   gameRecords = computed<GameRecord[]>(() =>
     this.games()
       .map((game) => {
         const gameMatches = this.playerMatches().filter((match) => match.gameId === game.id);
-        const wins = gameMatches.filter((match) => this.hasWon(match)).length;
-        const played = gameMatches.length;
-        return { game, played, wins, winRate: played ? Math.round((wins / played) * 100) : 0 };
+        const wins = this.matchService.countWins(gameMatches, this.playerId());
+        return { game, played: gameMatches.length, wins, winRate: calculateWinRate(wins, gameMatches.length) };
       })
       .filter((record) => record.played > 0)
       .sort((recordA, recordB) => recordB.played - recordA.played || recordB.wins - recordA.wins),
@@ -151,10 +148,6 @@ export class PlayerProfileComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
-  }
-
-  hasWon(match: Match): boolean {
-    return this.matchService.getWinnerId(match) === this.playerId();
   }
 
   getGameName(id: number): string {

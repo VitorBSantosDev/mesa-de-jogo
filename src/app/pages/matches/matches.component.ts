@@ -49,13 +49,13 @@ export class MatchesComponent implements OnInit {
     const gameId = this.gameFilter();
     const playerId = this.playerFilter();
 
-    return this.matches()
-      .filter(
-        (match) =>
-          (gameId === null || match.gameId === gameId) &&
-          (playerId === null || match.results.some((result) => result.playerId === playerId)),
-      )
-      .sort((matchA, matchB) => matchB.date.localeCompare(matchA.date));
+    const filtered = this.matches().filter(
+      (match) =>
+        (gameId === null || match.gameId === gameId) &&
+        (playerId === null || match.results.some((result) => result.playerId === playerId)),
+    );
+
+    return this.matchService.sortByDateDesc(filtered);
   });
 
   hasFilters = computed(() => this.gameFilter() !== null || this.playerFilter() !== null);

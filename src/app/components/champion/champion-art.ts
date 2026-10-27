@@ -192,7 +192,6 @@ type Line = (x0: number, y0: number, x1: number, y1: number, color: string, thic
 
 function drawHair(avatar: PlayerAvatar, look: ChampionLook, rect: Rect, plot: Plot, line: Line): void {
   if (look.hairStyle === 'curly') {
-    // caracóis com duas cores; cada hobbit com o penteado dos filmes
     const curls = (x0: number, y0: number, x1: number, y1: number) => {
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) plot(x, y, (x * 2 + y) % 5 === 0 ? 'q' : 'h');
     };

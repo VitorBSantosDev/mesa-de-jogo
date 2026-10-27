@@ -14,6 +14,7 @@ import { findById } from '../../utils/find.utils';
 import { DigitsOnlyDirective } from '../../directives/digits-only.directive';
 import { ToastService } from '../../services/toast.service';
 import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
+import { hasVisibleError } from '../../utils/form.utils';
 
 const BYTES_PER_MB = 1024 * 1024;
 const MAX_IMAGE_MB = 5;
@@ -169,8 +170,7 @@ export class GameNewComponent implements OnInit, HasUnsavedChanges {
   }
 
   showError(field: keyof typeof this.form.controls, error: string): boolean {
-    const control = this.form.controls[field];
-    return control.touched && control.hasError(error);
+    return hasVisibleError(this.form.controls[field], error);
   }
 
   submit(): void {

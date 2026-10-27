@@ -15,6 +15,7 @@ import { ToastService } from '../../services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
 import { HasUnsavedChanges } from '../../guards/unsaved-changes.guard';
+import { hasVisibleError } from '../../utils/form.utils';
 
 @Component({
   selector: 'app-players',
@@ -75,14 +76,7 @@ export class PlayersComponent implements OnInit, HasUnsavedChanges {
 
   standings = computed<PlayerStanding[]>(() =>
     this.players()
-      .map((player) => {
-        const playerMatches = this.matches().filter((match) =>
-          match.results.some((result) => result.playerId === player.id),
-        );
-        const wins = playerMatches.filter((match) => this.matchService.getWinnerId(match) === player.id).length;
-        const played = playerMatches.length;
-        return { player, wins, played, winRate: played ? Math.round((wins / played) * 100) : 0 };
-      })
+      .map((player) => ({ player, ...this.matchService.getPlayerStats(this.matches(), player.id) }))
       .sort((standingA, standingB) => standingA.player.name.localeCompare(standingB.player.name, 'pt')),
   );
 
@@ -115,8 +109,7 @@ export class PlayersComponent implements OnInit, HasUnsavedChanges {
   }
 
   showError(field: keyof typeof this.form.controls, error: string): boolean {
-    const control = this.form.controls[field];
-    return control.touched && control.hasError(error);
+    return hasVisibleError(this.form.controls[field], error);
   }
 
   hasUnsavedChanges(): boolean {

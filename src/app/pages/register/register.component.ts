@@ -9,6 +9,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { AuthError } from '@supabase/supabase-js';
 import { AuthService } from '../../services/auth.service';
+import { hasVisibleError } from '../../utils/form.utils';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const { password, confirmPassword } = group.value;
@@ -40,8 +41,7 @@ export class RegisterComponent {
   );
 
   showError(field: keyof typeof this.form.controls, error: string): boolean {
-    const control = this.form.controls[field];
-    return control.touched && control.hasError(error);
+    return hasVisibleError(this.form.controls[field], error);
   }
 
   showPasswordMismatch(): boolean {
