@@ -82,12 +82,24 @@
   <div class="grid">
     @for (standing of standings(); track standing.player.id) {
       <article class="player-card box">
+        <a
+          class="profile-link"
+          [routerLink]="['/jogadores', standing.player.id]"
+          [attr.aria-label]="'Ver o perfil de ' + standing.player.name"
+          title="Ver perfil"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" />
+          </svg>
+        </a>
+        
         <div class="avatar" [style.--avatar-color]="'var(--char-' + standing.player.avatar + ')'">
           <app-character-icon [avatar]="standing.player.avatar" />
         </div>
 
         <div class="info">
-          <h3>{{ standing.player.name }}</h3>
+          <h3><a [routerLink]="['/jogadores', standing.player.id]">{{ standing.player.name }}</a></h3>
           <span class="muted">
             {{ getCharacterName(standing.player.avatar) }} ·
             {{ standing.played }} {{ standing.played === 1 ? 'partida' : 'partidas' }} ·

@@ -9,6 +9,7 @@ import { MatchNewComponent } from './pages/match-new/match-new.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { RegisterComponent } from './pages/register/register.component';
+import { PlayerProfileComponent } from './pages/player-profile/player-profile.component';
 
 export const routes: Routes = [
   { path: '', component: RankingComponent, title: 'Classificação · Mesa de Jogo' },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'jogos/:id/editar', component: GameNewComponent, canActivate: [authGuard], title: 'Editar jogo · Mesa de Jogo' },
   { path: 'jogos/:id', component: GameDetailComponent, title: 'Jogo · Mesa de Jogo' },
   { path: 'jogadores', component: PlayersComponent, title: 'Jogadores · Mesa de Jogo' },
+  { path: 'jogadores/:id', component: PlayerProfileComponent, title: 'Jogador · Mesa de Jogo' },
   { path: 'partidas', component: MatchesComponent, title: 'Partidas · Mesa de Jogo' },
   { path: 'partidas/nova', component: MatchNewComponent, canActivate: [authGuard], title: 'Nova partida · Mesa de Jogo' },
   { path: 'partidas/:id/editar', component: MatchNewComponent, canActivate: [authGuard], title: 'Editar partida · Mesa de Jogo' },

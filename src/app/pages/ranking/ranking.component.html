@@ -72,10 +72,10 @@
                 <tr [class.first]="index === 0">
                   <td class="position">{{ index + 1 }}</td>
                   <td class="player-column">
-                    <span class="player">
+                    <a class="player" [routerLink]="['/jogadores', row.player.id]">
                       <app-character-icon [avatar]="row.player.avatar" />
                       {{ row.player.name }}
-                    </span>
+                    </a>
                   </td>
                   <td class="number">{{ row.wins }}</td>
                   <td class="number">{{ row.played }}</td>
@@ -115,10 +115,10 @@
             <a class="game" [routerLink]="['/jogos', champion.game.id]">{{ champion.game.name }}</a>
             @if (champion.player; as player) {
               <span class="champion">
-                <span class="player">
+                <a class="player" [routerLink]="['/jogadores', player.id]">
                   <app-character-icon [avatar]="player.avatar" />
                   {{ player.name }}
-                </span>
+                </a>
                 <span class="wins">{{ champion.wins }}×</span>
               </span>
             } @else if (champion.isTie) {
