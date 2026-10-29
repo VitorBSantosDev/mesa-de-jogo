@@ -95,8 +95,6 @@ npm install
 3. Corra depois `supabase/seed.sql` (jogadores, jogos e partidas de exemplo).
 4. Em **Authentication → URL Configuration**, acrescente `http://localhost:4200/**` às **Redirect URLs**.
 
-Para a confirmação de conta por email funcionar com qualquer endereço, configure um SMTP próprio em **Authentication → Emails → SMTP Settings**. O serviço de email incluído no Supabase só envia para os membros da organização.
-
 ### 3. Configurar as variáveis de ambiente
 
 Os ficheiros de ambiente não estão no repositório, para não publicar a chave. Crie a pasta `src/environments` com dois ficheiros iguais, `environment.ts` e `environment.development.ts`:
