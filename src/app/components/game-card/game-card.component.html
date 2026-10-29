@@ -1,7 +1,7 @@
 <button class="card" type="button" (click)="onClick()">
   <div class="lid" [style.background-color]="color()">
     @if (game().image) {
-      <img [src]="game().image" [alt]="'Caixa do jogo ' + game().name" />
+      <img [src]="game().image" [alt]="'Imagem do jogo ' + game().name" />
     }
     <span class="cat">{{ game().category }}</span>
   </div>
@@ -15,6 +15,5 @@
     <p class="played">
       {{ timesPlayed() }} {{ timesPlayed() === 1 ? 'partida' : 'partidas' }}
     </p>
-
   </div>
 </button>
