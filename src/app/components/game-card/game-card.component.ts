@@ -1,8 +1,10 @@
 import { Component, computed, input, output } from '@angular/core';
+import { UpperCasePipe } from '@angular/common';
 import { Game, GameCategory } from '../../models/game.model';
 
 @Component({
   selector: 'app-game-card',
+  imports: [UpperCasePipe],
   templateUrl: './game-card.component.html',
   styleUrl: './game-card.component.css',
 })
