@@ -9,7 +9,7 @@ import { RealtimeService } from '../../services/realtime.service';
 import { Player } from '../../models/player.model';
 import { Game } from '../../models/game.model';
 import { Match } from '../../models/match.model';
-import { getCharacterName } from '../../models/characters.model';
+import { getCharacterName } from '../../utils/character.utils';
 import { findById } from '../../utils/find.utils';
 import { CharacterIconComponent } from '../../components/character-icon/character-icon.component';
 import { MatchCardComponent } from '../../components/match-card/match-card.component';
