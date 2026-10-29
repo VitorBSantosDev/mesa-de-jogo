@@ -12,6 +12,7 @@ describe('CharacterIconComponent', () => {
 
     fixture = TestBed.createComponent(CharacterIconComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('avatar', 'gandalf');
     fixture.detectChanges();
   });
 
