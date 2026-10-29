@@ -14,6 +14,13 @@ interface SpriteDefinition {
 }
 
 const HERO_PADDING_TOP = 7;
+const MIN_SPRITE_WIDTH = 17;
+const SAURON_SIZE = 46;
+const SAURON_SHRINK = 0.78;
+const SAURON_HELMET_X = 14;
+const NAZGUL_WIDTH = 30;
+const NAZGUL_HEIGHT = 36;
+const NAZGUL_SHRINK = 0.89;
 const EVIL_SPRITES: SpriteKey[] = ['sauron', 'sauronWind', 'orc', 'balrog', 'nazgul'];
 
 const TALL = [
@@ -34,7 +41,7 @@ const SHORT = [
 const LUNGE: Rect[] = [[6, 14, 3, 5, '.'], [7, 14, 2, 1, 'P'], [8, 15, 2, 1, 'P'], [9, 16, 2, 1, 'P'], [9, 17, 2, 1, 'K'], [9, 18, 3, 1, 'K']];
 
 function buildSauron(wind: number): string[] {
-  const { plot, line, polygon, highlightEdges, toRows } = createPixelCanvas(46, 46);
+  const { plot, line, polygon, highlightEdges, toRows } = createPixelCanvas(SAURON_SIZE, SAURON_SIZE);
   const thickLine = (x0: number, y0: number, x1: number, y1: number, color: string, thickness: number) => {
     for (let k = 0; k < thickness; k++) line(x0, y0 + k, x1, y1 + k, color);
   };
@@ -105,12 +112,12 @@ function buildSauron(wind: number): string[] {
   line(40, 13, 43, 3, 'j');
   [[36, 12], [36, 8], [38, 4], [44, 9], [45, 5], [44, 2], [42, 0], [43, 0]].forEach(([x, y]) => plot(x, y, 'j'));
 
-  helmet.forEach((row, y) => [...row].forEach((color, i) => color !== '.' && plot(14 + i, y, color)));
+  helmet.forEach((row, y) => [...row].forEach((color, i) => color !== '.' && plot(SAURON_HELMET_X + i, y, color)));
   return toRows();
 }
 
 function buildNazgul(): string[] {
-  const { plot, line, polygon, highlightEdges, toRows } = createPixelCanvas(30, 36);
+  const { plot, line, polygon, highlightEdges, toRows } = createPixelCanvas(NAZGUL_WIDTH, NAZGUL_HEIGHT);
 
   polygon([[8, 3], [13, 4], [15, 10], [17, 31], [19, 35], [2, 35], [4, 31], [6, 11], [5, 6]], 'k');
   for (let x = 2; x <= 19; x += 2) plot(x, 35, '.');
@@ -219,9 +226,9 @@ const SPRITES: Record<SpriteKey, SpriteDefinition> = {
       '....zzfzz....zzhzz.......', '...zzzzz.....zzzzz.......', '...zzhzz......zzzzz......', '..ffffff......ffffff.....',
     ],
   },
-  nazgul: { rows: buildNazgul(), shrink: 0.89 },
-  sauron: { rows: buildSauron(0), shrink: 0.78 },
-  sauronWind: { rows: buildSauron(1), shrink: 0.78 },
+  nazgul: { rows: buildNazgul(), shrink: NAZGUL_SHRINK },
+  sauron: { rows: buildSauron(0), shrink: SAURON_SHRINK },
+  sauronWind: { rows: buildSauron(1), shrink: SAURON_SHRINK },
 };
 
 const gridCache = new Map<SpriteKey, Grid>();
@@ -234,7 +241,7 @@ export function getSpriteGrid(key: SpriteKey): Grid {
   const map = definition.map ?? {};
   const rows = definition.rows ?? (definition.base ?? []).map((row) => [...row].map((ch) => map[ch] ?? ch).join(''));
   const paddingTop = EVIL_SPRITES.includes(key) ? 0 : HERO_PADDING_TOP;
-  const width = Math.max(17, ...rows.map((row) => row.length));
+  const width = Math.max(MIN_SPRITE_WIDTH,...rows.map((row) => row.length));
 
   const grid: Grid = [...Array<string>(paddingTop).fill(''), ...rows].map((row) => [...row.padEnd(width, '.')]);
 
