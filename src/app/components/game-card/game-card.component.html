@@ -3,7 +3,7 @@
     @if (game().image) {
       <img [src]="game().image" [alt]="'Imagem do jogo ' + game().name" />
     }
-    <span class="cat">{{ game().category }}</span>
+    <span class="cat">{{ game().category | uppercase }}</span>
   </div>
 
   <div class="body">
