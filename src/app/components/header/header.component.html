@@ -9,9 +9,9 @@
     class="menu-toggle"
     aria-controls="main-menu"
     [attr.aria-expanded]="isMenuOpen()"
+    [attr.aria-label]="isMenuOpen() ? 'Fechar menu' : 'Abrir menu'"
     (click)="toggleMenu()"
   >
-    <span class="sr-only">{{ isMenuOpen() ? 'Fechar menu' : 'Abrir menu' }}</span>
     <span class="bars" aria-hidden="true"></span>
   </button>
 

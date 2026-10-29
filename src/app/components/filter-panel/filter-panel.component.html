@@ -10,12 +10,12 @@
     class="funnel"
     aria-controls="filters-panel"
     [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="isOpen() ? 'Fechar filtros' : 'Abrir filtros'"
     (click)="toggleFilters()"
   >
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M3 5h18l-7 8.5V19l-4 2v-7.5z" />
     </svg>
-    <span class="sr-only">{{ isOpen() ? 'Fechar filtros' : 'Abrir filtros' }}</span>
     @if (hasFilters()) {
       <span class="dot" aria-hidden="true"></span>
     }
