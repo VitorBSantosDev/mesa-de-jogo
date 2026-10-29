@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { GameNewComponent } from './game-new.component';
 
 describe('GameNewComponent', () => {
@@ -8,6 +9,7 @@ describe('GameNewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GameNewComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GameNewComponent);

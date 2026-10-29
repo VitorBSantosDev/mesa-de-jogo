@@ -12,6 +12,15 @@ describe('GameCardComponent', () => {
 
     fixture = TestBed.createComponent(GameCardComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('game', {
+      id: 1,
+      name: 'Catan',
+      category: 'Estratégia',
+      minPlayers: 3,
+      maxPlayers: 4,
+      duration: 90,
+      image: '',
+    });
     fixture.detectChanges();
   });
 
