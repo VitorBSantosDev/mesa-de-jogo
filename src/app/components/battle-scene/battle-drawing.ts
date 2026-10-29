@@ -6,6 +6,10 @@ export const SCENE_WIDTH = 240;
 export const SCENE_HEIGHT = 54;
 const GROUND = 42;
 const HALF = SCENE_WIDTH / 2;
+const MINAS_TIRITH_X = 76;
+const DOOM_X = HALF + 12;
+const BALROG_OFFSET = 50;
+const SAURON_OFFSET = 86;
 
 interface ArmyUnit {
   key: SpriteKey;
@@ -32,7 +36,7 @@ function getHeroLayout(heroCount: number) {
 function getArmyLayout(): ArmyUnit[] {
   const from = HALF + 6;
   const to = SCENE_WIDTH - 2;
-  const balrogX = to - 50;
+  const balrogX = to - BALROG_OFFSET;
   const orcs: ArmyUnit[] = [];
   for (let x = from; x + 12 <= balrogX + 10; x += 11) orcs.push({ key: 'orc', x, baseline: GROUND + 6 });
 
@@ -40,7 +44,7 @@ function getArmyLayout(): ArmyUnit[] {
     ...orcs,
     { key: 'balrog', x: balrogX, baseline: GROUND + 8, scale: 2, hasWings: true },
     { key: 'nazgul', x: from + 2, baseline: GROUND + 11, hasGlow: true },
-    { key: 'sauron', x: to - 86, baseline: GROUND + 11, hasAura: true },
+    { key: 'sauron', x: to - SAURON_OFFSET, baseline: GROUND + 11, hasAura: true },
   ];
 }
 
@@ -206,7 +210,7 @@ function drawDaySide(ctx: CanvasRenderingContext2D, frame: number): void {
     ctx.fillRect(x, y, 1, frame ? 2 : 1),
   );
 
-  drawMinasTirith(ctx, 76, GROUND - 5);
+  drawMinasTirith(ctx, MINAS_TIRITH_X, GROUND - 5);
 
   [[34, 6], [102, 13]].forEach(([cx, cy], k) => {
     const dx = frame && k % 2 ? 1 : 0;
@@ -252,20 +256,19 @@ function drawDarkSide(ctx: CanvasRenderingContext2D, frame: number): void {
     ctx.fillRect(x, ridge, 1, GROUND - ridge);
   }
 
-  const doom = HALF + 12;
   ctx.fillStyle = '#140c0e';
   for (let i = 0; i < 40; i++) {
     const top = 14 + Math.abs(i - 20);
-    ctx.fillRect(doom + i, top, 1, GROUND - top);
+    ctx.fillRect(DOOM_X + i, top, 1, GROUND - top);
   }
   ctx.fillStyle = frame ? '#ffb347' : '#ff6a2a';
-  ctx.fillRect(doom + 19, 13, 2, 2);
-  ctx.fillRect(doom + 20, 16, 1, 5);
-  ctx.fillRect(doom + 19, 22, 1, 4);
+  ctx.fillRect(DOOM_X + 19, 13, 2, 2);
+  ctx.fillRect(DOOM_X + 20, 16, 1, 5);
+  ctx.fillRect(DOOM_X + 19, 22, 1, 4);
   ctx.fillStyle = '#5a3526';
   ctx.globalAlpha = 0.55;
-  ctx.fillRect(doom + 18, 9, 4, 3);
-  ctx.fillRect(doom + 17, 5, 5, 3);
+  ctx.fillRect(DOOM_X + 18, 9, 4, 3);
+  ctx.fillRect(DOOM_X + 17, 5, 5, 3);
   ctx.globalAlpha = 1;
 }
 
