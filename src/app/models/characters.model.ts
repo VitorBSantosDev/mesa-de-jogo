@@ -19,7 +19,3 @@ export const CHARACTERS: Character[] = [
   { avatar: 'sam', name: 'Sam' },
   { avatar: 'merry', name: 'Merry' },
 ];
-
-export function getCharacterName(avatar: PlayerAvatar): string {
-  return CHARACTERS.find((character) => character.avatar === avatar)?.name ?? avatar;
-}

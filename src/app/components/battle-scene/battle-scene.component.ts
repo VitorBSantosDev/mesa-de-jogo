@@ -11,7 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { Player } from '../../models/player.model';
-import { getCharacterName } from '../../models/characters.model';
+import { getCharacterName } from '../../utils/character.utils';
 import { SCENE_HEIGHT, SCENE_WIDTH, drawBattle } from './battle-drawing';
 
 const FRAME_DURATION = 450;
